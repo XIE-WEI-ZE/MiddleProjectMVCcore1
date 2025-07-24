@@ -1,0 +1,49 @@
+﻿@model PrjMiddleProject.Models.StoreSupplier
+
+@{
+    ViewData["Title"] = "新增供應商";
+}
+
+<h1>新增供應商</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="StoreSupplierCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SupplierName" class="control-label mb-2">供應商名稱</label>
+                <input asp-for="SupplierName" class="form-control" />
+                <span asp-validation-for="SupplierName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SupplierGui" class="control-label mb-2">統編</label>
+                <input asp-for="SupplierGui" class="form-control" />
+                <span asp-validation-for="SupplierGui" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact" class="control-label mb-2">聯絡人</label>
+                <input asp-for="Contact" class="form-control" />
+                <span asp-validation-for="Contact" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactNumber" class="control-label mb-2">聯絡電話</label>
+                <input asp-for="ContactNumber" class="form-control" />
+                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label mb-2">地址</label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="送出並新增" class="btn btn-primary" />
+                <a asp-action="StoreSupplierIndex" class="btn btn-secondary">取消</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
