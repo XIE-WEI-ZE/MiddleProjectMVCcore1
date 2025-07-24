@@ -1,0 +1,83 @@
+﻿@model PrjMiddleProject.ViewModels.CMemberViewModel
+
+@{
+    ViewData["Title"] = "新增會員";
+}
+
+<h2 class="mb-4">新增會員</h2>
+
+<!-- 顯示驗證錯誤 -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary()
+    </div>
+}
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Account" class="form-label"></label>
+        <input asp-for="Account" class="form-control" />
+        <span asp-validation-for="Account" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IDNumber" class="form-label"></label>
+        <input asp-for="IDNumber" class="form-control" />
+        <span asp-validation-for="IDNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <select asp-for="Gender" class="form-select">
+            <option value="">請選擇</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Birthday" class="form-label"></label>
+        <input asp-for="Birthday" type="date" class="form-control" />
+        <span asp-validation-for="Birthday" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ResidesInCareHome" class="form-label d-block">入住狀態</label>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" asp-for="ResidesInCareHome" value="true" />
+            <label class="form-check-label" for="ResidesInCareHome">已入住</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" asp-for="ResidesInCareHome" value="false" checked />
+            <label class="form-check-label" for="ResidesInCareHome">未入住</label>
+        </div>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input asp-for="IsEnabled" class="form-check-input" />
+        <label asp-for="IsEnabled" class="form-check-label">啟用帳號</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">儲存</button>
+    <a asp-action="List" class="btn btn-secondary">返回清單</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
