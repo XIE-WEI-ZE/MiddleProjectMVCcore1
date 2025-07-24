@@ -1,0 +1,119 @@
+﻿@model prjCareHomeSystem.ViewModels.CRegisterViewModel
+
+@{
+    ViewData["Title"] = "註冊新帳號";
+}
+
+<h2 class="mb-4">會員註冊</h2>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-warning">@TempData["message"]</div>
+}
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-action="Register" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Account" class="form-label"></label>
+        <input asp-for="Account" class="form-control" />
+        <span asp-validation-for="Account" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <select asp-for="Gender" class="form-select">
+            <option value="">請選擇</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <!-- 🎂 生日：三欄選擇 -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label asp-for="BirthYear" class="form-label">出生年</label>
+            <select asp-for="BirthYear" class="form-select">
+                <option value="">-- 年 --</option>
+                @for (int year = DateTime.Now.Year - 100; year <= DateTime.Now.Year; year++)
+                {
+                    <option value="@year">@year 年</option>
+                }
+            </select>
+            <span asp-validation-for="BirthYear" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="BirthMonth" class="form-label">出生月</label>
+            <select asp-for="BirthMonth" class="form-select">
+                <option value="">-- 月 --</option>
+                @for (int month = 1; month <= 12; month++)
+                {
+                    <option value="@month">@month 月</option>
+                }
+            </select>
+            <span asp-validation-for="BirthMonth" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="BirthDay" class="form-label">出生日</label>
+            <select asp-for="BirthDay" class="form-select">
+                <option value="">-- 日 --</option>
+                @for (int day = 1; day <= 31; day++)
+                {
+                    <option value="@day">@day 日</option>
+                }
+            </select>
+            <span asp-validation-for="BirthDay" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="City" class="form-label"></label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="District" class="form-label"></label>
+        <input asp-for="District" class="form-control" />
+        <span asp-validation-for="District" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoadAddress" class="form-label"></label>
+        <input asp-for="RoadAddress" class="form-control" />
+        <span asp-validation-for="RoadAddress" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">送出註冊</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

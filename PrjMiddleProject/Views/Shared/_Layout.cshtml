@@ -1,0 +1,428 @@
+﻿@using PrjMiddleProject.Models
+@using System.Text.Json
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PrjMiddleProject</title>
+    <script type="importmap"></script>
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PrjMiddleProject.styles.css" asp-append-version="true" />
+
+    <!-- ========== All CSS files linkup ========= -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="~/css/lineicons.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/css/materialdesignicons.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/css/fullcalendar.css" />
+    <link rel="stylesheet" href="~/css/fullcalendar.css" />
+    <link rel="stylesheet" href="~/css/main.css" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- ======== Preloader =========== -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+    <!-- ======== Preloader =========== -->
+
+    <!-- ======== sidebar-nav start =========== -->
+    <aside class="sidebar-nav-wrapper">
+        <div class="navbar-logo">
+            <a asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo/logo.png" alt="logo" />
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_1"
+                       aria-controls="ddmenu_1"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-solid fa-users"></i>
+                        </span>
+                        <span class="text">會員管理</span>
+                    </a>
+                    <ul id="ddmenu_1" class="collapse show dropdown-nav">
+                        <li>
+                            <a href="index.html" class="active">會員明細管理</a>
+                        </li>
+                        @* <li>
+                            <a href="index.html">預約記錄管理</a>
+                        </li> *@
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       class="collapsed"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_2"
+                       aria-controls="ddmenu_2"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </span>
+                        <span class="text">員工管理</span>
+                    </a>
+                    <ul id="ddmenu_2" class="collapse dropdown-nav">
+                        <li>
+                            <a href="settings.html">員工基本資料</a>
+                        </li>
+                        <li>
+                            <a href="blank-page.html">員工個人管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       class="collapsed"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_3"
+                       aria-controls="ddmenu_3"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-regular fa-house"></i>
+                        </span>
+                        <span class="text">床位管理</span>
+                    </a>
+                    <ul id="ddmenu_3" class="collapse dropdown-nav">
+                        <li>
+                            <a href="signin.html">房間總表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       class="collapsed"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_4"
+                       aria-controls="ddmenu_4"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-solid fa-person-walking"></i>
+                        </span>
+                        <span class="text">活動管理</span>
+                    </a>
+                    <ul id="ddmenu_4" class="collapse dropdown-nav">
+                        <li>
+                            <a href="signin.html">活動明細</a>
+                        </li>
+                        <li>
+                            <a href="signin.html">活動批次</a>
+                        </li>
+                        <li>
+                            <a href="signin.html">報名</a>
+                        </li>
+                        <li>
+                            <a href="signin.html">活動紀錄</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       class="collapsed"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_5"
+                       aria-controls="ddmenu_5"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-solid fa-comments"></i>
+                        </span>
+                        <span class="text">社群管理</span>
+                    </a>
+                    <ul id="ddmenu_5" class="collapse dropdown-nav">
+                        <li>
+                            <a href="signin.html">文章清單</a>
+                        </li>
+                        <li>
+                            <a href="signin.html">檢舉清單</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       class="collapsed"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_6"
+                       aria-controls="ddmenu_6"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </span>
+                        <span class="text">商城管理</span>
+                    </a>
+                    <ul id="ddmenu_6" class="collapse dropdown-nav">
+                        <li>
+                            <a href="signin.html">商品管理</a>
+                        </li>
+                        <li>
+                            <a href="signin.html">類別管理</a>
+                        </li>
+                        <li>
+                            <a href="signin.html">訂單管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item nav-item-has-children">
+                    <a href="#0"
+                       class="collapsed"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#ddmenu_7"
+                       aria-controls="ddmenu_7"
+                       aria-expanded="false"
+                       aria-label="Toggle navigation">
+                        <span class="icon">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </span>
+                        <span class="text">物料管理</span>
+                    </a>
+                    <ul id="ddmenu_7" class="collapse dropdown-nav">
+                        <li>
+                            <a href="signin.html">物料</a>
+                        </li>
+                    </ul>
+                </li>
+                @* <li class="nav-item">
+                    <a href="invoice.html">
+                        <span class="icon">
+                            看要不要加icon
+                        </span>
+                        <span class="text">客服管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="invoice.html">
+                        <span class="icon">
+                            看要不要加icon
+                        </span>
+                        <span class="text">帳號設定</span>
+                    </a>
+                </li> *@
+                <span class="divider"><hr /></span>
+                
+            </ul>
+        </nav>
+        <div class="promo-box">
+            <div class="promo-icon animate__animated animate__bounce animate__infinite">
+                <img class="mx-auto" src="~/images/logo/logo-icon-big.svg" alt="Logo">
+            </div>
+            <h3>關懷備至，樂齡天堂</h3>
+        </div>
+    </aside>
+    <div class="overlay"></div>
+    <!-- ======== sidebar-nav end =========== -->
+    <!-- ======== main-wrapper start =========== -->
+    <main class="main-wrapper">
+        <!-- ========== header start ========== -->
+        <header class="header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-5 col-md-5 col-6">
+                        <div class="header-left d-flex align-items-center">
+                            <div class="menu-toggle-btn mr-15">
+                                <button id="menu-toggle" class="main-btn primary-btn btn-hover">
+                                    <i class="lni lni-chevron-left me-2 animate__animated animate__headShake animate__infinite"></i> Menu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-6">
+                        <div class="header-right">
+                            <!-- notification start -->
+                            <div class="notification-box ml-15 d-none d-md-flex">
+                                <button class="dropdown-toggle" type="button" id="notification" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <svg class="animate__animated animate__headShake" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11 20.1667C9.88317 20.1667 8.88718 19.63 8.23901 18.7917H13.761C13.113 19.63 12.1169 20.1667 11 20.1667Z"
+                                              fill="" />
+                                        <path d="M10.1157 2.74999C10.1157 2.24374 10.5117 1.83333 11 1.83333C11.4883 1.83333 11.8842 2.24374 11.8842 2.74999V2.82604C14.3932 3.26245 16.3051 5.52474 16.3051 8.24999V14.287C16.3051 14.5301 16.3982 14.7633 16.564 14.9352L18.2029 16.6342C18.4814 16.9229 18.2842 17.4167 17.8903 17.4167H4.10961C3.71574 17.4167 3.5185 16.9229 3.797 16.6342L5.43589 14.9352C5.6017 14.7633 5.69485 14.5301 5.69485 14.287V8.24999C5.69485 5.52474 7.60672 3.26245 10.1157 2.82604V2.74999Z"
+                                              fill="" />
+                                    </svg>
+                                    <span></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notification">
+                                    <li>
+                                        <a href="#0">
+                                            <div class="image">
+                                                <img src="~/images/lead/lead-6.png" alt="" />
+                                            </div>
+                                            <div class="content">
+                                                <h6>
+                                                    John Doe
+                                                    <span class="text-regular">
+                                                        comment on a product.
+                                                    </span>
+                                                </h6>
+                                                <p>
+                                                    Lorem ipsum dolor sit amet, consect etur adipiscing
+                                                    elit Vivamus tortor.
+                                                </p>
+                                                <span>10 mins ago</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#0">
+                                            <div class="image">
+                                                <img src="~/images/lead/lead-1.png" alt="" />
+                                            </div>
+                                            <div class="content">
+                                                <h6>
+                                                    Jonathon
+                                                    <span class="text-regular">
+                                                        like on a product.
+                                                    </span>
+                                                </h6>
+                                                <p>
+                                                    Lorem ipsum dolor sit amet, consect etur adipiscing
+                                                    elit Vivamus tortor.
+                                                </p>
+                                                <span>10 mins ago</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- notification end -->
+                            <!-- profile start -->
+                            
+                            @*登入註冊用*@
+                            @* @{
+                                string json = Context.Session.GetString("SK_LOGIN_USER");
+                                var member = string.IsNullOrEmpty(json) ? null : JsonSerializer.Deserialize<Member>(json);
+                                if (member == null)
+                                {
+                                    Context.Response.Redirect("/Home/Login");
+                                }
+                            } *@                           
+                            @* <div class="profile-box ml-15">
+                                <button class="dropdown-toggle bg-transparent border-0" type="button" id="profile"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="profile-info">
+                                        <div class="info">
+                                            <div class="image">
+                                                <img src="~/images/profile/profile-image.png" alt="頭像" />
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-500 wow animate__animated animate__backInRight">
+                                                    @(member != null ? member.Name : "訪客")
+                                                </h6>
+                                                <p>@(member?.Email ?? "尚未登入")</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
+                                    @if (member != null)
+                                    {
+                                        <li><a href="#"><i class="lni lni-user"></i> 我的資料</a></li>
+                                        <li><a href="#"><i class="lni lni-cog"></i> 設定</a></li>
+                                        <li class="divider"></li>
+                                        <li><a asp-controller="Home" asp-action="Logout"><i class="lni lni-exit"></i> 登出</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a asp-controller="Home" asp-action="Login"><i class="lni lni-enter"></i> 登入</a></li>
+                                        <li><a asp-controller="Home" asp-action="Register"><i class="lni lni-user"></i> 註冊</a></li>
+                                    }
+                                </ul>
+                            </div> *@
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
+                                    <li>
+                                        <div class="author-info flex items-center !p-1">
+                                            <div class="image">
+                                                <img src="~/images/profile/profile-image.png" alt="image">
+                                            </div>
+                                            <div class="content">
+                                                <h4 class="text-sm">Adam Joe</h4>
+                                                <a class="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs" href="#">Email@gmail.com</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="#0">
+                                            <i class="lni lni-user"></i> View Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#0">
+                                            <i class="lni lni-alarm"></i> Notifications
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#0"> <i class="lni lni-inbox"></i> Messages </a>
+                                    </li>
+                                    <li>
+                                        <a href="#0"> <i class="lni lni-cog"></i> Settings </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="#0"> <i class="lni lni-exit"></i> Sign Out </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- profile end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ========== header end ========== -->
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <!-- ========== footer start =========== -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 order-last order-md-first">
+                        <div class="copyright text-center text-md-start">
+                            <p class="text-sm">
+                                &copy; 2025 - 安養院 All Rights Reserved
+                            </p>
+                        </div>
+                    </div>
+                    <!-- end col-->
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </footer>
+        <!-- ========== footer end =========== -->
+    </main>
+    <!-- ======== main-wrapper end =========== -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- ========= All Javascript files linkup ======== -->
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/Chart.min.js"></script>
+    <script src="~/js/dynamic-pie-chart.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    <script src="~/js/fullcalendar.js"></script>
+    <script src="~/js/jvectormap.min.js"></script>
+    <script src="~/js/world-merc.js"></script>
+    <script src="~/js/polyfill.js"></script>
+    <script src="~/js/main.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
