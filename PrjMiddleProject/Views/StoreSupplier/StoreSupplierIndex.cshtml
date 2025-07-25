@@ -1,0 +1,75 @@
+﻿@model IEnumerable<PrjMiddleProject.Models.StoreSupplier>
+
+@{
+    ViewData["Title"] = "供應商";
+}
+
+<h1 class="mt-2">供應商列表</h1>
+@using (Html.BeginForm())
+{
+    <p class="my-3">
+        <label class="me-2">關鍵字</label> @Html.TextBox("txtKeyword") <input type="submit" value="查詢" class="btn btn-secondary ms-2" />
+    </p>
+}
+
+<p>
+    <a asp-action="StoreSupplierCreate" class="btn btn-primary mb-2">新增供應商</a>
+</p>
+<table class="table align-middle text-center">
+    <thead>
+        <tr>
+            <th>
+                編號
+            </th>
+            <th>
+                供應商名稱
+            </th>
+            <th>
+                統編
+            </th>
+            <th>
+                聯絡人
+            </th>
+            <th>
+                聯絡電話
+            </th>
+            <th>
+                地址
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model) {
+                count++;
+        <tr>
+            <td>
+                @count
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierGui)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                        @Html.ActionLink("編輯", "StoreSupplierEdit", "StoreSupplier", new { id = item.SupplierId }, new { @class = "btn btn-warning" })
+                        @Html.ActionLink("刪除", "Delete", "StoreSupplier", new { id = item.SupplierId },
+                        new { onclick = "return confirm('確定要刪除嗎?')", @class = "btn btn-danger" })
+            </td>
+        </tr>
+}
+}
+    </tbody>
+</table>
