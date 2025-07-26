@@ -1,0 +1,150 @@
+﻿@model PrjMiddleProject.ViewModel.CEventDetailViewModel
+
+@{
+    ViewData["Title"] = "新增活動明細";
+}
+
+<h1>新增</h1>
+
+<h4>請輸入活動明細</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EventName" class="control-label">活動名稱</label>
+                <input asp-for="EventName" class="form-control" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Organizer" class="control-label">主辦單位</label>
+                <input asp-for="Organizer" class="form-control" />
+                <span asp-validation-for="Organizer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TargetAudience" class="control-label">活動對象</label>
+                <input asp-for="TargetAudience" class="form-control" />
+                <span asp-validation-for="TargetAudience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label">類別</label>
+                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label">狀態</label>
+                <select asp-for="Status" class ="form-control" asp-items="ViewBag.Status"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">聯繫窗口</label>
+                <input id="ContactPersonName" class="form-control" readonly />
+                <input asp-for="ContactPersonId" id="ContactPersonId" type="hidden" />
+                <button type="button" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#employeeModal">選擇聯繫窗口</button>
+                <span asp-validation-for="ContactPersonId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactPhone" class="control-label">連絡電話</label>
+                <input asp-for="ContactPhone" class="form-control" />
+                <span asp-validation-for="ContactPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EventLocation" class="control-label">活動地點</label>
+                <input asp-for="EventLocation" class="form-control" />
+                <span asp-validation-for="EventLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quota" class="control-label">名額</label>
+                <input asp-for="Quota" class="form-control" />
+                <span asp-validation-for="Quota" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">活動內容</label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MedicalAid" class="control-label">醫療救助</label>
+                <input asp-for="MedicalAid" class="form-control" />
+                <span asp-validation-for="MedicalAid" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">是否需付費
+                    <input class="form-check-input" asp-for="IsPaid" /> @Html.DisplayNameFor(model => model.IsPaid)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalAmount" class="control-label">金額</label>
+                <input asp-for="TotalAmount" class="form-control" />
+                <span asp-validation-for="TotalAmount" class="text-danger"></span>
+            </div>
+            <input asp-for="CreatedAt" type="hidden" />
+            <input asp-for="CreatedBy" type="hidden" />
+            
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<!--聯繫窗口 -->
+<div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeModalLabel">選擇聯繫窗口</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-3" id="employeeSearch" placeholder="輸入姓名或編號搜尋">
+                <ul class="list-group" id="employeeList">
+                    @foreach (var emp in ViewBag.EmployeeList as List<PrjMiddleProject.Models.Employee>)
+                    {
+                        <li class="list-group-item list-group-item-action" style="cursor:pointer"
+                            data-id="@emp.EmployeeId" data-name="@emp.Name">
+                            [@emp.EmployeeId] @emp.Name
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("employeeSearch");
+            const listItems = document.querySelectorAll("#employeeList li");
+
+            searchInput.addEventListener("input", function () {
+                const keyword = this.value.toLowerCase();
+
+                listItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(keyword) ? "" : "none";
+                });
+            });
+
+            // 點選員工自動填入欄位
+            listItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    const id = this.getAttribute("data-id");
+                    const name = this.getAttribute("data-name");
+
+                    // 假設你有這兩個欄位
+                    document.getElementById("ContactPersonId").value = id;
+                    document.getElementById("ContactPersonName").value = `[${id}] ${name}`;
+                    bootstrap.Modal.getInstance(document.getElementById("employeeModal")).hide();
+                });
+            });
+        });
+    </script>
+}
+

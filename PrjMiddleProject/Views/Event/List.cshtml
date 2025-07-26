@@ -1,0 +1,131 @@
+﻿@using Azure.Core
+@model IEnumerable<PrjMiddleProject.ViewModel.CEventDetailViewModel>
+
+@{
+    ViewData["Title"] = "活動主表";
+}
+<style>
+ 
+</style>
+
+<h1>活動主表</h1>
+<style>
+    .pl-3 {
+        padding-left: 12px;
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    <p> 關鍵字 @Html.TextBox("txtKeyword")  
+
+        <button type="submit" class="btn btn-primary btn-sm ms-2">查詢</button>
+    </p>
+}
+
+
+
+<p>
+    <a asp-action="Create" class="btn btn-success">新增活動</a>
+</p>
+
+
+<table class="table table-bordered table-striped align-middle " >
+    <thead >
+        <tr>
+            <th class="ps-3">編號</th>
+            <th class="ps-3">活動名稱</th>
+            <th class="ps-3">主辦單位</th>
+            <th class="ps-3">類別</th>
+            <th class="ps-3">聯繫窗口</th>
+            <th class="ps-3">活動地點</th>
+            <th class="ps-3">活動內容</th>
+            <th class="ps-3"> 金額</th>
+            <th class="ps-3"> 狀態</th>
+            <th class="ps-3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model)
+            {
+              
+                <tr>
+                    <td class="ps-3">  @Html.DisplayFor(modelItem => item.EventId)</td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.EventName)
+                    </td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.Organizer)
+                    </td>
+                    <td class="ps-3">
+                          
+                        @item.Category?.CategoryName
+                    </td class="ps-3">
+                    <td class="ps-3">
+                        @{
+                            var empDict = ViewBag.EmployeeDict as Dictionary<int, string>;
+                            string contactName = "未知";
+
+                            if (empDict != null && item.ContactPersonId != null)
+                            {
+                                int contactKey = item.ContactPersonId;
+                                if (empDict.ContainsKey(contactKey))
+                                {
+                                    contactName = empDict[contactKey];
+                                }
+                            }
+                        }
+                        @contactName
+                    </td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.EventLocation)
+                    </td>
+                    <td  class="ps-3"style="max-width: 200px; word-wrap: break-word; white-space: normal;">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+
+
+                    <td >
+                        @item.StatusNavigation?.StatusName
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-info">編輯</a> 
+                        <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-danger">刪除</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @{
+            int currentPage = ViewBag.CurrentPage;
+            int totalPages = ViewBag.TotalPages;
+            string keyword = Context.Request.Query["txtKeyword"];
+
+            if (totalPages > 1)
+            {
+                //<<第一頁
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                  <a class="page-link" asp-action="List" asp-route-page="1" asp-route-txtKeyword="@keyword">&laquo;</a>
+                </li>
+
+                for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" asp-action="List" asp-route-page="@i" asp-route-txtKeyword="@keyword">@i</a>
+                    </li>
+                }
+                //>>最後一頁
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="List" asp-route-page="@totalPages" asp-route-txtKeyword="@keyword">&raquo;</a>
+                </li>
+            }
+        }
+    </ul>
+</nav>
