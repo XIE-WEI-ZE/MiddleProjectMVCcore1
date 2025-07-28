@@ -1,0 +1,71 @@
+﻿@model PrjMiddleProject.ViewModel.CAddReplyFormViewModel
+
+<form id="createReplyForm">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.PostId)
+
+    <!-- 會員編號 -->
+    <div class="mb-3">
+        <label for="MemberId" class="form-label">會員編號</label>
+        @Html.DropDownListFor(m => m.MemberId, (SelectList)ViewBag.MemberId, "請選擇會員", new { @class = "form-control", id = "MemberId" })
+        <span class="text-danger field-validation-valid" data-valmsg-for="MemberId" data-valmsg-replace="true"></span>
+    </div>
+
+    <!-- 回覆內容 -->
+    <div class="mb-3">
+        <label for="ReplyContent" class="form-label">回覆內容</label>
+        @Html.TextAreaFor(m => m.ReplyContent, new { @class = "form-control", rows = 5, id = "ReplyContent" })
+        <span class="text-danger field-validation-valid" data-valmsg-for="ReplyContent" data-valmsg-replace="true"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">送出回覆</button>
+</form>
+
+<script>
+    // 解除並綁定表單提交事件，避免多次綁定
+    $(document).off("submit", "#createReplyForm").on("submit", "#createReplyForm", function(e) {
+        e.preventDefault();
+        console.log("submit event triggered");
+
+        // 清空錯誤訊息
+        $(".field-validation-valid").text("");
+
+        const memberId = $("#MemberId").val();
+        const replyContent = $("#ReplyContent").val();
+
+        // 前端驗證：會員是否有選擇
+        if (!memberId || memberId === "") {
+            $("[data-valmsg-for='MemberId']").text("請選擇會員");
+            return; // 中止提交
+        }
+
+        if (!replyContent || replyContent.trim() === "") {
+            $("[data-valmsg-for='ReplyContent']").text("請輸入回覆內容");
+            return;
+        }
+
+        // 取出防偽標記
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            url: '/Posts/CreateReply',
+            type: 'POST',
+            data: $(this).serialize(),
+            headers: { 'RequestVerificationToken': token },
+            success: function (res) {
+                console.log("ajax success", res);
+                if (res.success) {
+                    alert("回覆成功！");
+                    // 假設表單是在 Bootstrap Modal，ID 為 createReplyModal
+                    $('#createReplyModal').modal('hide');
+                } else {
+                    alert("提交失敗：" + res.errors.join("\n"));
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("ajax error", status, error, xhr.responseText);
+                alert("伺服器錯誤，請稍後再試。");
+            }
+        });
+    });
+</script>

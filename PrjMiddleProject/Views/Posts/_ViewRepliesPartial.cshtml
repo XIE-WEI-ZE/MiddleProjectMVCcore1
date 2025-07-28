@@ -1,0 +1,32 @@
+﻿@model PrjMiddleProject.ViewModel.CReplyViewModel
+
+<div class="card">
+    <div class="card-header">
+        <strong>「@Model.Post.PostTitle」的回覆列表</strong>
+    </div>
+
+    <div class="card-body">
+        @if (Model.Replies.Any())
+        {
+            <ul class="list-group" id="replyList">
+                @foreach (var reply in Model.Replies)
+                {
+                    var memberName = Model.MemberNamesMap.ContainsKey(reply.MemberId)
+                    ? Model.MemberNamesMap[reply.MemberId]
+                    : "未知會員";
+
+                    <li class="list-group-item">
+                        <strong>會員編號：@reply.MemberId (@memberName)</strong><br />
+                        @reply.ReplyContent
+                        <br />
+                        <small class="text-muted">@reply.RepliedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted" id="noRepliesMessage">尚無回覆</p>
+        }
+    </div>
+</div>
