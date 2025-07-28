@@ -1,0 +1,86 @@
+﻿@model PrjMiddleProject.ViewModels.CPaginationInfo
+
+@if (Model.TotalPages > 0)
+{
+    <div class="d-flex justify-content-between align-items-center mt-3">
+
+        @* 顯示目前頁 / 總頁 *@
+        <div class="ms-3">
+            第 @Model.CurrentPage 頁 / 共 @Model.TotalPages 頁
+        </div>
+
+        @* 每頁筆數下拉選單 *@
+        <form method="get" class="d-inline">
+            <div class="d-flex align-items-center gap-2">
+                <label for="pageSize" class="form-label mb-0">每頁顯示：</label>
+                <select class="form-select form-select-sm w-auto" name="pageSize" id="pageSize" onchange="this.form.submit()">
+                    @foreach (var size in new[] { 5, 10, 20, 50 })
+                    {
+                        <option value="@size" selected="@(size == Model.PageSize ? "selected" : null)">
+                            @size
+                        </option>
+                    }
+                </select>
+                <span>筆</span>
+
+                @* 保留關鍵字查詢條件 *@
+                <input type="hidden" name="txtKeyword" value="@Model.Keyword" />
+                @* 讓使用者選完 pageSize 時停留在當前頁，而不是跳回第 1 頁，只要移除這行即可 *@
+                <input type="hidden" name="page" value="1" />
+            </div>
+        </form>
+        
+
+    </div>
+
+    <!-- ✅ 分頁按鈕列 -->
+    <div class="text-center mt-2">
+        <nav>
+            <ul class="pagination justify-content-center">
+
+                <!-- << 第一頁 -->
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       href="@Url.Action(Model.ActionName, new { page = 1, pageSize = Model.PageSize, txtKeyword = Model.Keyword })">
+                        &laquo;
+                    </a>
+                </li>
+
+                <!-- < 上一頁 -->
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       href="@Url.Action(Model.ActionName, new { page = Model.CurrentPage - 1, pageSize = Model.PageSize, txtKeyword = Model.Keyword })">
+                        &lt;
+                    </a>
+                </li>
+
+                <!-- 頁碼清單 -->
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link"
+                           href="@Url.Action(Model.ActionName, new { page = i, pageSize = Model.PageSize, txtKeyword = Model.Keyword })">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <!-- > 下一頁 -->
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="@Url.Action(Model.ActionName, new { page = Model.CurrentPage + 1, pageSize = Model.PageSize, txtKeyword = Model.Keyword })">
+                        &gt;
+                    </a>
+                </li>
+
+                <!-- >> 最後一頁 -->
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="@Url.Action(Model.ActionName, new { page = Model.TotalPages, pageSize = Model.PageSize, txtKeyword = Model.Keyword })">
+                        &raquo;
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}

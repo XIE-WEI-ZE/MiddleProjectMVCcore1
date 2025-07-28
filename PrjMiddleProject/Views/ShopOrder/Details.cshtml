@@ -1,0 +1,100 @@
+﻿@model PrjMiddleProject.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "訂單詳細資料";
+}
+
+<div class="title-wrapper pt-30">
+    <div class="title">
+        <h1>訂單詳細資料</h1>
+    </div>
+</div>
+
+<div class="card-style mb-30">
+    <h4 class="mb-3">訂單資訊</h4>
+    <dl class="row">
+        <dt class="col-sm-2">訂單編號</dt>
+        <dd class="col-sm-10">@Model.Order.OrderId</dd>
+
+        <dt class="col-sm-2">訂購人</dt>
+        <dd class="col-sm-10">@Model.Order.BuyerName</dd>
+
+        <dt class="col-sm-2">收件人</dt>
+        <dd class="col-sm-10">@Model.Order.ReceiverName</dd>
+
+        <dt class="col-sm-2">收件電話</dt>
+        <dd class="col-sm-10">@Model.Order.ReceiverPhone</dd>
+
+        <dt class="col-sm-2">配送方式</dt>
+        <dd class="col-sm-10">@Model.Order.DeliveryMethod</dd>
+
+        <dt class="col-sm-2">付款方式</dt>
+        <dd class="col-sm-10">@Model.Order.PaymentMethod</dd>
+
+        <dt class="col-sm-2">送貨地址</dt>
+        <dd class="col-sm-10">@Model.Order.DeliveryAddress</dd>
+
+        <dt class="col-sm-2">訂單時間</dt>
+        <dd class="col-sm-10">@Model.Order.OrderTime</dd>
+
+        <dt class="col-sm-2">發票抬頭</dt>
+        <dd class="col-sm-10">@Model.Order.InvoiceTitle</dd>
+
+        <dt class="col-sm-2">發票稅額</dt>
+        <dd class="col-sm-10">@Model.Order.InvoiceTax</dd>
+
+        <dt class="col-sm-2">發票方式</dt>
+        <dd class="col-sm-10">@Model.Order.InvoiceInMethod</dd>
+
+        <dt class="col-sm-2">總金額</dt>
+        <dd class="col-sm-10">@Model.Order.TotalAmount 元</dd>
+
+        @* <dt class="col-sm-2">會員名稱</dt>
+        <dd class="col-sm-10">@Model.MemberName</dd>
+
+        <dt class="col-sm-2">處理員工</dt>
+        <dd class="col-sm-10">@Model.EmployeeName</dd> *@
+
+        <dt class="col-sm-2">備註</dt>
+        <dd class="col-sm-10">@Model.Order.Note</dd>
+    </dl>
+</div>
+
+<div class="title-wrapper pt-30">
+    <div class="title">
+        <h4>訂單明細（共 @Model.ItemCount 筆）</h4>
+    </div>
+</div>
+
+<div class="card-style mb-30">
+    <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><h6 class="text-nowrap">商品名稱</h6></th>
+                    <th><h6 class="text-nowrap">數量</h6></th>
+                    <th><h6 class="text-nowrap">單價</h6></th>
+                    <th><h6 class="text-nowrap">折扣</h6></th>
+                    <th><h6 class="text-nowrap">小計</h6></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Details)
+                {
+                    <tr>
+                        <td><p class="text-nowrap">@item.ProductName</p></td>
+                        <td><p class="text-nowrap">@item.Quantity</p></td>
+                        <td><p class="text-nowrap">@item.UnitPrice</p></td>
+                        <td><p class="text-nowrap">@(item.Discount ?? 0)%</p></td>
+                        <td><p class="text-nowrap">@item.Subtotal</p></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="List" class="btn btn-secondary">返回列表</a>
+    </div>
+</div>
+

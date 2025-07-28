@@ -1,0 +1,196 @@
+﻿@model IEnumerable<PrjMiddleProject.Models.ShopOrder>
+
+@{
+    ViewData["Title"] = "訂單列表";
+}
+
+@* 計算 ViewBag.CountStart 與 ViewBag.PaginationInfo *@
+@await Html.PartialAsync("_PaginationSetup")
+
+<div class="title-wrapper pt-30">
+    <div class="title">
+        <h1>訂單管理</h1>
+    </div>
+</div>
+
+<div class="card-style mb-30">
+    @*會產生form標籤*@
+    @using (Html.BeginForm())
+    {
+        <p>
+            關鍵字
+            <div class="col-sm-12 col-lg-4 d-flex mb-4">
+                <input type="text" class="form-control" name="txtKeyword" value="" />
+                <input type="submit" class="btn btn-primary ms-1" name="name" value="查詢" />
+            </div>
+        </p>
+    }
+    <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h6 class="text-nowrap">
+                            @Html.DisplayNameFor(model => model.OrderId)
+                        </h6>
+                    </th>
+                    <th>
+                        <h6 class="text-nowrap">
+                            @Html.DisplayNameFor(model => model.CustomerId)
+                        </h6>
+                    </th>
+                    <th>
+                        <h6 class="text-nowrap">
+                            @Html.DisplayNameFor(model => model.OrderTime)
+                        </h6>
+                    </th>
+                    @* <th>
+                        <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.BuyerName)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.ReceiverName)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.ReceiverPhone)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.DeliveryMethod)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.DeliveryAddress)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.InvoiceTitle)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.InvoiceTax)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.InvoiceInMethod)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.Note)
+            </h6>
+                </th>
+            <th>
+                <h6 class="text-nowrap">
+                @Html.DisplayNameFor(model => model.TotalAmount)
+            </h6>
+                </th> *@
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = (int)(ViewBag.CountStart ?? 0);
+                    foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td>
+                                <p class="text-nowrap">
+                                    @count
+                                </p>
+                            </td>
+                            <td>
+                                <p class="text-nowrap">
+                                    @Html.DisplayFor(modelItem => item.CustomerId)
+                                </p>
+                            </td>
+                            <td>
+                                <p class="text-nowrap">
+                                    @Html.DisplayFor(modelItem => item.OrderTime)
+                                </p>
+                            </td>
+                            @*<td>
+                            <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.BuyerName)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.ReceiverName)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.ReceiverPhone)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.PaymentMethod)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.DeliveryMethod)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.DeliveryAddress)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.InvoiceTitle)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.InvoiceTax)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.InvoiceInMethod)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.Note)
+                    </p>
+                        </td>
+                    <td>
+                    <p class="text-nowrap">
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </p>
+                        </td>*@
+                            <td>
+                                @Html.ActionLink("檢視", "Details", "ShopOrder", new { id = item.OrderId }, new { @class = "btn btn-warning btn-sm text-nowrap" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* 頁面最下方：分頁元件 UI *@
+    @await Html.PartialAsync("_Pagination", (PrjMiddleProject.ViewModels.CPaginationInfo)ViewBag.PaginationInfo)
+</div>

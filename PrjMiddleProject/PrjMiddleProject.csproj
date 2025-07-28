@@ -22,7 +22,10 @@
     <Folder Include="wwwroot\images\beds\" />
     <Folder Include="wwwroot\images\eshoppingcart\" />
     <Folder Include="wwwroot\images\employees\" />
+    <Folder Include="wwwroot\images\ShopProductThumb\" />
     <Folder Include="wwwroot\images\social\" />
+    <Folder Include="wwwroot\images\ShopProductLarge\" />
+    <Folder Include="wwwroot\images\summernote\upload\" />
   </ItemGroup>
 
 </Project>

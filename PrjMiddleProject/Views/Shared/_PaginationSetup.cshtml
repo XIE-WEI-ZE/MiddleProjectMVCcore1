@@ -1,0 +1,19 @@
+﻿@{
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+
+    ViewBag.CountStart = (currentPage - 1) * pageSize;
+
+    var pagination = new PrjMiddleProject.ViewModels.CPaginationInfo
+    {
+        CurrentPage = currentPage,
+        TotalPages = totalPages,
+        PageSize = pageSize,
+        Keyword = ViewBag.Keyword,
+        ActionName = ViewContext.RouteData.Values["action"]?.ToString() ?? "List"
+    };
+
+    ViewBag.PaginationInfo = pagination;
+}
+

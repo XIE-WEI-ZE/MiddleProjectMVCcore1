@@ -1,0 +1,85 @@
+﻿@model IEnumerable<PrjMiddleProject.Models.ShopCategory>
+
+@{
+    ViewData["Title"] = "類別列表";
+}
+@* 計算 ViewBag.CountStart 與 ViewBag.PaginationInfo *@
+@await Html.PartialAsync("_PaginationSetup")
+
+<div class="title-wrapper pt-30">
+    <div class="title">
+        <h1>類別管理</h1>
+    </div>
+</div>
+
+<div class="card-style mb-30">
+    @*會產生form標籤*@
+    @using (Html.BeginForm())
+    {
+        <p>
+            關鍵字
+            <div class="col-sm-12 col-lg-4 d-flex mb-4">
+                <input type="text" class="form-control" name="txtKeyword" value="" />
+                <input type="submit" class="btn btn-primary ms-1" name="name" value="查詢" />
+            </div>
+        </p>
+    }
+
+    <p>
+        <a asp-action="Create" class="btn btn-success mb-3">新增類別</a>
+    </p>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="alert alert-warning">
+            @TempData["Msg"]
+        </div>
+    }
+
+    <div class="table-wrapper table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <h6 class="text-nowrap">
+                            @Html.DisplayNameFor(model => model.CategoryId)
+                        </h6>
+                    </th>
+                    <th>
+                        <h6 class="text-nowrap">
+                            @Html.DisplayNameFor(model => model.CategoryName)
+                        </h6>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = (int)(ViewBag.CountStart ?? 0);
+                    foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td>
+                                <p class="text-nowrap">
+                                    @count
+                                </p>
+                            </td>
+                            <td>
+                                <p class="text-nowrap">
+                                    @Html.DisplayFor(modelItem => item.CategoryName)
+                                </p>
+                            </td>
+                            <td>
+                                @Html.ActionLink("編輯", "Edit", "ShopCategory", new { id = item.CategoryId }, new { @class = "btn btn-warning btn-sm text-nowrap" })
+                                @Html.ActionLink("刪除", "Delete", "ShopCategory", new { id = item.CategoryId }, new { @class = "btn btn-danger btn-sm text-nowrap", onclick = "return confirm('確定要刪除嗎?')" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    @* 頁面最下方：分頁元件 UI *@
+    @await Html.PartialAsync("_Pagination", (PrjMiddleProject.ViewModels.CPaginationInfo)ViewBag.PaginationInfo)
+</div>

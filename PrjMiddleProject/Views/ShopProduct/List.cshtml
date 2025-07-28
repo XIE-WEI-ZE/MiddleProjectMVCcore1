@@ -1,0 +1,82 @@
+﻿@model IEnumerable<PrjMiddleProject.Models.ShopProduct>
+
+@{
+    ViewData["Title"] = "商品列表";
+}
+@* 計算 ViewBag.CountStart 與 ViewBag.PaginationInfo *@
+@await Html.PartialAsync("_PaginationSetup")
+
+<div class="title-wrapper pt-30">
+    <div class="title">
+        <h1>商品列表</h1>
+    </div>
+</div>
+
+<div class="card-style mb-30">
+    @*會產生form標籤*@
+    @using (Html.BeginForm())
+    {
+        <p>
+            關鍵字
+            <div class="col-sm-12 col-lg-4 d-flex mb-4">
+                <input type="text" class="form-control" name="txtKeyword" value="" /> 
+                <input type="submit" class="btn btn-primary ms-1" name="name" value="查詢" />
+            </div>
+        </p>
+    }
+    <a asp-action="Create" class="btn btn-success mb-3">新增商品</a>
+    <div class="table-wrapper table-responsive">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><h6 class="text-nowrap">商品序號</h6></th>
+                    <th><h6 class="text-nowrap">縮圖</h6></th>
+                    <th><h6 class="text-nowrap">商品名稱</h6></th>
+                    <th><h6 class="text-nowrap">售價</h6></th>
+                    <th><h6 class="text-nowrap">原價</h6></th>
+                    <th><h6 class="text-nowrap">類別</h6></th>
+                    <th><h6 class="text-nowrap">摘要</h6></th>
+                    <th><h6 class="text-nowrap">操作</h6></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = (int)(ViewBag.CountStart ?? 0);
+                    foreach (var p in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td>
+                                <p class="text-nowrap">
+                                    @count
+                                </p>
+                            </td>
+                            <td>
+                                <p class="text-nowrap">
+                                    <img src="@p.ThumbnailPhotoPath" class="img-thumbnail" style="width:100px; height:100px;" />
+                                </p>
+                            </td>
+                            <td><p class="text-nowrap">@p.ProductName</p></td>
+                            <td><p class="text-nowrap">@p.SalePrice</p></td>
+                            <td><p class="text-nowrap">@p.OriginalPrice</p></td>
+                            <td><p class="text-nowrap">@p.Category?.CategoryName</p></td>
+                            <td><p class="text-nowrap">@p.Summary</p></td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-warning btn-sm text-nowrap">編輯</a>
+                                <form asp-action="Delete" asp-route-id="@p.ProductId" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm text-nowrap"
+                                            onclick="return confirm('確定要刪除這筆商品（含圖片）嗎？');">
+                                        刪除
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    @* 頁面最下方：分頁元件 UI *@
+    @await Html.PartialAsync("_Pagination", (PrjMiddleProject.ViewModels.CPaginationInfo)ViewBag.PaginationInfo)
+</div>
