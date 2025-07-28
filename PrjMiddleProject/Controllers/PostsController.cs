@@ -37,6 +37,7 @@ namespace PrjMiddleProject.Controllers
             return View(posts);
         }
 
+        // 新增文章
         public IActionResult Create()
         {
             var members = _context.Members
@@ -52,6 +53,7 @@ namespace PrjMiddleProject.Controllers
             return PartialView("_CreatePartial");
         }
 
+        // 處理新增文章表單提交
         [HttpPost]
         public IActionResult Create(CommunityPost p)
         {
@@ -172,13 +174,22 @@ namespace PrjMiddleProject.Controllers
         [Route("Posts/CreateReply/{id}")]
         public ActionResult CreateReply(int id)
         {
+
+            var members = _context.Members
+                .OrderBy(m => m.MemberId)
+                .Select(m => new
+                {
+                    m.MemberId,
+                    DisplayText = m.MemberId + " (" + m.Name + ")"
+                }).ToList();
+
+            ViewBag.MemberId = new SelectList(members, "MemberId", "DisplayText");
+
             var post = _context.CommunityPosts.FirstOrDefault(p => p.PostId == id);
             if (post == null)
             {
                 return NotFound(); // 沒有文章就返回 404
             }
-
-            ViewBag.MemberId = new SelectList(_context.Members, "MemberId", "Name");
 
             var vm = new CAddReplyFormViewModel
             {

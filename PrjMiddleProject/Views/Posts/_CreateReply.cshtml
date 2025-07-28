@@ -33,9 +33,10 @@
         const memberId = $("#MemberId").val();
         const replyContent = $("#ReplyContent").val();
 
+        // 前端驗證：會員是否有選擇
         if (!memberId || memberId === "") {
             $("[data-valmsg-for='MemberId']").text("請選擇會員");
-            return;
+            return; // 中止提交
         }
 
         if (!replyContent || replyContent.trim() === "") {
@@ -55,15 +56,8 @@
                 console.log("ajax success", res);
                 if (res.success) {
                     alert("回覆成功！");
-
                     // 假設表單是在 Bootstrap Modal，ID 為 createReplyModal
                     $('#createReplyModal').modal('hide');
-
-                    // 若沒有用 Modal，改用隱藏表單
-                    // $("#createReplyForm").hide();
-
-                    // 可選：清空表單
-                    // $("#createReplyForm")[0].reset();
                 } else {
                     alert("提交失敗：" + res.errors.join("\n"));
                 }
