@@ -3,6 +3,15 @@
 
 @{
     ViewData["Title"] = "活動主表";
+
+     string currentSort = ViewBag.CurrentSort as string ?? "EventID";
+    string sortLabel = currentSort switch
+    {
+        "EventID" => "依編號排序",
+        "CategoryID" => "依類別排序",
+        "Status" => "依狀態排序",
+        _ => "依編號排序"
+    };
 }
 <style>
  
@@ -16,12 +25,34 @@
 </style>
 
 @using (Html.BeginForm())
-{
-    <p> 關鍵字 @Html.TextBox("txtKeyword")  
-
-        <button type="submit" class="btn btn-primary btn-sm ms-2">查詢</button>
-    </p>
+{    <div class="d-flex align-items-center justify-content-between mb-3">
+        <!-- 左邊：關鍵字 -->
+        <div class="d-flex align-items-center">
+            <label class="me-2 mb-0">關鍵字</label>
+            @Html.TextBox("txtKeyword", null, new { @class = "form-control form-control-sm me-2", style = "width: 200px;" })
+            <button type="submit" class="btn btn-primary btn-sm">查詢</button>
+        </div>
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                 @sortLabel
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li>
+        <a class="dropdown-item" asp-action="List" asp-route-sortBy="EventID" asp-route-txtKeyword="@Context.Request.Query["txtKeyword"]">依編號排序</a>
+    </li>
+    <li>
+        <a class="dropdown-item" asp-action="List" asp-route-sortBy="CategoryID" asp-route-txtKeyword="@Context.Request.Query["txtKeyword"]">依類別排序</a>
+    </li>
+    <li>
+        <a class="dropdown-item" asp-action="List" asp-route-sortBy="Status" asp-route-txtKeyword="@Context.Request.Query["txtKeyword"]">依狀態排序</a>
+    </li>
+</ul>
+            </div>
+       
+    </div>
 }
+ 
+
 
 
 
@@ -94,7 +125,8 @@
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-info">編輯</a> 
-                        <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-danger">刪除</a>
+                        <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-danger" new { onclick = "return confirm('確定嗎?')" }>刪除</a>
+
                     </td>
                 </tr>
             }
@@ -103,29 +135,35 @@
 </table>
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-        @{
-            int currentPage = ViewBag.CurrentPage;
-            int totalPages = ViewBag.TotalPages;
-            string keyword = Context.Request.Query["txtKeyword"];
+    @{
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    string keyword = Context.Request.Query["txtKeyword"];
+}
 
-            if (totalPages > 1)
+@if (totalPages > 1)
+{
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <!-- 第一頁 -->
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="List" asp-route-page="1" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">&laquo;</a>
+            </li>
+
+            @for (int i = 1; i <= totalPages; i++)
             {
-                //<<第一頁
-                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                  <a class="page-link" asp-action="List" asp-route-page="1" asp-route-txtKeyword="@keyword">&laquo;</a>
-                </li>
-
-                for (int i = 1; i <= totalPages; i++)
-                {
-                    <li class="page-item @(i == currentPage ? "active" : "")">
-                        <a class="page-link" asp-action="List" asp-route-page="@i" asp-route-txtKeyword="@keyword">@i</a>
-                    </li>
-                }
-                //>>最後一頁
-                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="List" asp-route-page="@totalPages" asp-route-txtKeyword="@keyword">&raquo;</a>
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="List" asp-route-page="@i" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">@i</a>
                 </li>
             }
-        }
+
+            <!-- 最後一頁 -->
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="List" asp-route-page="@totalPages" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+}
+ 
     </ul>
 </nav>

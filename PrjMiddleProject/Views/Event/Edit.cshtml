@@ -1,17 +1,23 @@
 ﻿@model PrjMiddleProject.ViewModel.CEventDetailViewModel
 
 @{
-    ViewData["Title"] = "新增活動明細";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>新增</h1>
+<h1>修改</h1>
 
-<h4>請輸入活動明細</h4>
+<h4>活動明細修改</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" id="EventDetailCreate">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+            <div class="form-group">
+                <label asp-for="EventId" class="control-label" >活動編號</label>
+                <input asp-for="EventId" class="form-control bg-light" readonly />
+                <span asp-validation-for="EventId" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="EventName" class="control-label">活動名稱</label>
                 <input asp-for="EventName" class="form-control" />
@@ -27,13 +33,16 @@
                 <input asp-for="TargetAudience" class="form-control" />
                 <span asp-validation-for="TargetAudience" class="text-danger"></span>
             </div>
+          
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label">類別</label>
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label">狀態</label>
-                <select asp-for="Status" class ="form-control" asp-items="ViewBag.Status"></select>
+                <select asp-for="Status" class="form-control" asp-items="ViewBag.Status"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label d-block">聯繫窗口</label>
@@ -42,7 +51,7 @@
                         <input asp-for="ContactPersonId" id="ContactPersonId" class="form-control" readonly />
                     </div>
                     <div class="col-6">
-                        <input id="ContactPersonName" class="form-control" asp-items="ViewBag.ContactPersonName" readonly />
+                        <input id="ContactPersonName" class="form-control" value="@Model.ContactPersonName" readonly />
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#employeeModal">選擇聯繫窗口</button>
@@ -69,13 +78,13 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MedicalAid" class="control-label">醫療救助</label>
+                <label asp-for="MedicalAid" class="control-label">醫療救助與安全措施</label>
                 <input asp-for="MedicalAid" class="form-control" />
                 <span asp-validation-for="MedicalAid" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">是否需付費
-                    <input class="form-check-input" asp-for="IsPaid" />
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsPaid" />是否需付費
                 </label>
             </div>
             <div class="form-group">
@@ -83,19 +92,14 @@
                 <input asp-for="TotalAmount" class="form-control" />
                 <span asp-validation-for="TotalAmount" class="text-danger"></span>
             </div>
-            <input asp-for="CreatedAt" type="hidden" />
-            <input asp-for="CreatedBy" type="hidden" />
-            
+         
             <div class="form-group">
-                <input type="submit" value="新增活動" class="btn btn-primary" />
+                <input type="submit" value="修改完成" class="btn btn-primary" />
                 <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("List")'">取消</button>
             </div>
-           
         </form>
     </div>
 </div>
-
-
 <!--聯繫窗口 -->
 <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
@@ -121,16 +125,16 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
     <script>
+        //開窗後將員工資料回傳到畫面上
             document.addEventListener("DOMContentLoaded", function () {
 
 
             const searchInput = document.getElementById("employeeSearch");
             const listItems = document.querySelectorAll("#employeeList li");
-       
+
 
 
             searchInput.addEventListener("input", function () {
@@ -160,7 +164,6 @@
 
         });
 
- 
+
     </script>
 }
-

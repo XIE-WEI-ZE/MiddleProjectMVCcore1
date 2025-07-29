@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PrjMiddleProject.Models;
 using PrjMiddleProject.ViewModel;
 using PrjMiddleProject.ViewModels;
+using System.Globalization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PrjMiddleProject.Controllers
@@ -11,7 +13,7 @@ namespace PrjMiddleProject.Controllers
     public class EventController : Controller
     {
         //show EventDetail
-        public IActionResult List(string txtKeyWord, int page = 1)
+        public IActionResult List(string txtKeyWord, int page = 1,string sortBy = "id")
         {
             int pageSize = 10;
             NursingHomeContext db = new NursingHomeContext();
@@ -29,13 +31,29 @@ namespace PrjMiddleProject.Controllers
                 query = query.Where(e =>
                     (e.EventName != null && e.EventName.Contains(txtKeyWord)) ||
                     (e.Description != null && e.Description.Contains(txtKeyWord)) ||
-                    (isInt && e.EventId == keywordAsInt)
+                     e.EventId.ToString().Contains(txtKeyWord)
                 );
+            }
+            ViewBag.CurrentSort = sortBy;
+            switch (sortBy)
+            {
+                case "EventID":
+                    query = query.OrderBy(e => e.EventId);
+                    break;
+                case "CategoryID":
+                    query = query.OrderByDescending(e => e.CategoryId);
+                    break;
+                case "Status":
+                    query = query.OrderByDescending(e => e.Status);
+                    break;
+                default:
+                    query = query.OrderBy(e => e.EventId);
+                    break;
             }
             // 分頁資料，轉為 ViewModel
             int totalCount = query.Count();
             var result = query
-                 .OrderBy(e => e.EventId)
+                 //.OrderBy(e => e.EventId)
                  .Skip((page - 1) * pageSize)
                  .Take(pageSize)
                  .Select(m => new CEventDetailViewModel
@@ -66,6 +84,8 @@ namespace PrjMiddleProject.Controllers
             //抓取聯繫窗口人員姓名(資料庫忘記串接)
             var employeeDict = db.Employees.ToDictionary(e => e.EmployeeId, e => e.Name);
             ViewBag.EmployeeDict = employeeDict;
+            
+            
             return View(result);
         }
 
@@ -104,6 +124,7 @@ namespace PrjMiddleProject.Controllers
         [HttpPost]
         public IActionResult Create(EventDetail p)
         {
+          
             NursingHomeContext db = new NursingHomeContext();
             //預設資料
             p.CreatedAt = DateTime.Now;
@@ -115,5 +136,121 @@ namespace PrjMiddleProject.Controllers
             db.SaveChanges();
             return RedirectToAction("List");
         }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+                return RedirectToAction("List");
+
+            NursingHomeContext db = new NursingHomeContext();
+            //預設資料
+            //活動類型
+            var categories = db.EventCategories
+             .Select(c => new SelectListItem
+             {
+                 Value = c.CategoryId.ToString(),   //下拉選單實際的值
+                 Text = c.CategoryName             //下拉選單顯示的字
+             }).ToList();
+
+            ViewBag.CategoryId = categories;
+            //活動狀態
+            var status = db.EventStatuses.Where(e => e.StatusCategory == "活動總表")
+            .Select(c => new SelectListItem
+            {
+                Value = c.StatusId.ToString(),   //下拉選單實際的值
+                Text = c.StatusName             //下拉選單顯示的字
+            }).ToList();
+            ViewBag.Status = status;
+            // 把所有員工撈出來，傳給 ViewBag
+            var employees = db.Employees.ToList();
+            ViewBag.EmployeeList = employees;
+
+
+
+
+            EventDetail x = db.EventDetails.FirstOrDefault(p => p.EventId == id);
+            if (x == null)
+                return RedirectToAction("List");
+            string? contactName = db.Employees
+    .Where(e => e.EmployeeId == x.ContactPersonId)
+    .Select(e => e.Name)
+    .FirstOrDefault();
+
+            // 轉成 ViewModel
+            var viewModel = new CEventDetailViewModel
+            {
+                EventId = x.EventId,
+                EventName = x.EventName,
+                Organizer = x.Organizer,
+                TargetAudience = x.TargetAudience,
+                CategoryId = x.CategoryId,
+                Status = x.Status,
+                ContactPersonId = x.ContactPersonId,
+                ContactPersonName= contactName,
+                ContactPhone = x.ContactPhone,
+                EventLocation = x.EventLocation,
+                Quota = x.Quota,
+                Description = x.Description,
+                MedicalAid = x.MedicalAid,
+                IsPaid = x.IsPaid,
+                TotalAmount = x.TotalAmount,
+                CreatedAt = x.CreatedAt,
+                CreatedBy = x.CreatedBy
+            };
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        public IActionResult Edit(EventDetail uiProd)
+        {
+            NursingHomeContext db = new NursingHomeContext();
+            EventDetail dbProd = db.EventDetails.FirstOrDefault(p => p.EventId == uiProd.EventId);
+            if (dbProd == null)
+                return RedirectToAction("List");
+         
+
+            dbProd.EventName = uiProd.EventName;
+            //dbProd.FQty = uiProd.FQty;
+            //dbProd.FCost = uiProd.FCost;
+            //dbProd.FPrice = uiProd.FPrice;
+
+            dbProd.EventName = uiProd.EventName;
+            dbProd.Organizer = uiProd.Organizer;
+            dbProd.TargetAudience = uiProd.TargetAudience;
+            dbProd.CategoryId = uiProd.CategoryId;
+            dbProd.Status = uiProd.Status;
+            dbProd.ContactPersonId = uiProd.ContactPersonId;
+            dbProd.ContactPhone = uiProd.ContactPhone;
+            dbProd.EventLocation = uiProd.EventLocation;
+            dbProd.Quota = uiProd.Quota;
+            dbProd.Description = uiProd.Description;
+            dbProd.MedicalAid = uiProd.MedicalAid;
+            dbProd.IsPaid = uiProd.IsPaid;
+            dbProd.TotalAmount = uiProd.TotalAmount;
+
+            dbProd.LastModifiedAt = DateTime.Now;
+            dbProd.LastModifiedBy = 20;
+            if (dbProd.TotalAmount == null)
+                dbProd.TotalAmount = 0;
+
+            db.SaveChanges();
+            return RedirectToAction("List");
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+                return RedirectToAction("List");
+
+            NursingHomeContext db = new NursingHomeContext();
+            EventDetail x = db.EventDetails.FirstOrDefault(p => p.EventId == id);
+            if (x == null)
+                return RedirectToAction("List");
+
+            db.EventDetails.Remove(x);
+            db.SaveChanges();
+            return RedirectToAction("List");
+        }
+
     }
 }
