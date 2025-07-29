@@ -1,0 +1,236 @@
+﻿@model PrjMiddleProject.Models.RoomTable
+
+@{
+    ViewData["Title"] = "編輯房間";
+    var availableMembers = ViewBag.AvailableMembers as List<KeyValuePair<int, string>> ?? new();
+    var occupiedMembers = ViewBag.OccupiedMembers as HashSet<int> ?? new();
+    var memberError = ViewBag.MemberError as string;
+}
+
+<h2 class="mb-4">編輯房間資料</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- 房間號碼 -->
+            <div class="form-group mb-3">
+                <label class="form-label">房間代號</label>
+                <div class="d-flex align-items-center">
+                    <select id="roomPrefix" class="form-select w-auto me-2">
+                        <option value="R001" selected="@(Model.RoomNumber.StartsWith("R001"))">R001</option>
+                        <option value="R002" selected="@(Model.RoomNumber.StartsWith("R002"))">R002</option>
+                        <option value="R003" selected="@(Model.RoomNumber.StartsWith("R003"))">R003</option>
+                        <option value="R004" selected="@(Model.RoomNumber.StartsWith("R004"))">R004</option>
+                        <option value="R005" selected="@(Model.RoomNumber.StartsWith("R005"))">R005</option>
+                        <option value="R006" selected="@(Model.RoomNumber.StartsWith("R006"))">R006</option>
+                        <option value="R007" selected="@(Model.RoomNumber.StartsWith("R007"))">R007</option>
+                        <option value="R008" selected="@(Model.RoomNumber.StartsWith("R008"))">R008</option>
+                        <option value="R009" selected="@(Model.RoomNumber.StartsWith("R009"))">R009</option>
+                        <option value="R010" selected="@(Model.RoomNumber.StartsWith("R010"))">R010</option>
+                        <option value="R011" selected="@(Model.RoomNumber.StartsWith("R011"))">R011</option>
+                        <option value="R012" selected="@(Model.RoomNumber.StartsWith("R012"))">R012</option>
+                        <option value="R013" selected="@(Model.RoomNumber.StartsWith("R013"))">R013</option>
+                        <option value="R014" selected="@(Model.RoomNumber.StartsWith("R014"))">R014</option>
+                        <option value="R015" selected="@(Model.RoomNumber.StartsWith("R015"))">R015</option>
+                    </select>
+                    <span class="mx-1">-</span>
+                    <select id="roomSuffix" class="form-select w-auto">
+                        <option value="" selected="@(string.IsNullOrEmpty(Model.RoomNumber.Split('-').LastOrDefault()))">無分區</option>
+                        <option value="A" selected="@(Model.RoomNumber.EndsWith("A"))">A</option>
+                        <option value="B" selected="@(Model.RoomNumber.EndsWith("B"))">B</option>
+                        <option value="C" selected="@(Model.RoomNumber.EndsWith("C"))">C</option>
+                        <option value="D" selected="@(Model.RoomNumber.EndsWith("D"))">D</option>
+                    </select>
+                </div>
+                <input type="hidden" asp-for="RoomNumber" id="RoomNumber" />
+                <span id="roomNumberValidation" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomName" class="form-label">房間名稱</label>
+                <select asp-for="RoomName" class="form-select">
+                    <option value="">請選擇</option>
+                    <option selected="@(Model.RoomName == "秋康")">秋康</option>
+                    <option selected="@(Model.RoomName == "夏雨")">夏雨</option>
+                    <option selected="@(Model.RoomName == "松竹")">松竹</option>
+                </select>
+                <span asp-validation-for="RoomName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomType" class="form-label">房型</label>
+                <select asp-for="RoomType" class="form-select">
+                    <option value="">請選擇</option>
+                    <option value="false" selected="@(Model.RoomType == false)">單人房</option>
+                    <option value="true" selected="@(Model.RoomType == true)">多人房</option>
+                </select>
+                <span asp-validation-for="RoomType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BedCount" class="form-label">床位數</label>
+                <select asp-for="BedCount" class="form-select">
+                    <option value="">請選擇</option>
+                    <option value="1" selected="@(Model.BedCount == 1)">1</option>
+                    <option value="2" selected="@(Model.BedCount == 2)">2</option>
+                    <option value="4" selected="@(Model.BedCount == 4)">4</option>
+                </select>
+                <span asp-validation-for="BedCount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">原始圖片</label><br />
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@($"/images/beds/{Model.ImagePath}")" alt="房間圖片" width="120" class="img-thumbnail mb-2" onclick="document.getElementById('photoUpload').click()" style="cursor: pointer;" />
+                }
+                else
+                {
+                    <span class="text-muted" onclick="document.getElementById('photoUpload').click()" style="cursor: pointer;">目前無圖片</span>
+                }
+                <input type="file" id="photoUpload" name="photo" class="form-control d-none" /> <!-- 隱藏的輸入框 -->
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomPrice" class="form-label">房價</label>
+                <input asp-for="RoomPrice"
+                       id="roomPriceInput"
+                       class="form-control"
+                       type="number"
+                       step="1"
+                       pattern="^\d+$"
+                       title="請輸入整數房價"
+                       oninvalid="this.setCustomValidity('請輸入整數，不可有小數點或非數字')"
+                       oninput="setIntegerValue(this)" />
+                <span asp-validation-for="RoomPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MemberId" class="form-label">住戶編號（選填）</label>
+                <select asp-for="MemberId" class="form-select" id="MemberIdSelect">
+                    <option value="">請選擇</option>
+                    @foreach (var m in availableMembers)
+                    {
+                        var isOccupied = occupiedMembers.Contains(m.Key) && m.Key != Model.MemberId;
+                        var classAttr = isOccupied ? "text-danger" : "";
+                        var displayText = $"{m.Key} - {m.Value}" + (isOccupied ? "（住民已經入住了）" : "");
+
+                        if (isOccupied)
+                        {
+                            <option value="@m.Key" class="@classAttr" disabled selected="@(Model.MemberId == m.Key)">@displayText</option>
+                        }
+                        else
+                        {
+                            <option value="@m.Key" class="@classAttr" selected="@(Model.MemberId == m.Key)">@displayText</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="MemberId" class="text-danger"></span>
+                @if (!string.IsNullOrEmpty(memberError))
+                {
+                    <div class="text-danger">@memberError</div>
+                }
+            </div>
+
+            <div class="form-group mt-4">
+                <input type="submit" value="儲存變更" class="btn btn-primary" />
+                <a asp-action="List" class="btn btn-secondary ms-2">返回清單</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function setIntegerValue(input) {
+            const value = input.value;
+            if (value === '' || isNaN(value)) {
+                input.value = '';
+                return;
+            }
+            input.value = Math.floor(Number(value));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const priceInput = document.getElementById('roomPriceInput');
+            if (priceInput && priceInput.value) {
+                priceInput.value = Math.floor(Number(priceInput.value));
+            }
+        });
+
+        const memberSelect = document.getElementById("MemberIdSelect");
+        memberSelect?.addEventListener("change", function () {
+            const selected = this.options[this.selectedIndex];
+            if (selected) {
+                selected.textContent = selected.value;
+            }
+        });
+
+        const prefixSelect = document.getElementById("roomPrefix");
+        const suffixSelect = document.getElementById("roomSuffix");
+        const hiddenInput = document.getElementById("RoomNumber");
+        const validationSpan = document.getElementById("roomNumberValidation");
+
+        function updateRoomNumber() {
+            const prefix = prefixSelect.value;
+            const suffix = suffixSelect.value;
+            const newRoomNumber = suffix ? `${prefix}-${suffix}` : prefix;
+            hiddenInput.value = newRoomNumber;
+            checkRoomNumberDuplicate(newRoomNumber);
+        }
+
+        function checkRoomNumberDuplicate(roomNumber) {
+            fetch(`/RoomTable/CheckRoomNumber?roomNumber=${roomNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists && roomNumber !== '@Model.RoomNumber') {
+                        validationSpan.textContent = data.message;
+                    } else {
+                        validationSpan.textContent = '';
+                    }
+                });
+        }
+
+        prefixSelect.addEventListener("change", updateRoomNumber);
+        suffixSelect.addEventListener("change", updateRoomNumber);
+        updateRoomNumber();
+
+        // 觸發圖片上傳並使用 AJAX 提交
+        const photoInput = document.getElementById('photoUpload');
+        if (photoInput) {
+            photoInput.addEventListener('change', function () {
+                const formData = new FormData();
+                formData.append('roomNumber', '@Model.RoomNumber');
+                formData.append('photo', photoInput.files[0]);
+
+                fetch('/RoomTable/UploadPhoto', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 更新圖片顯示而不刷新整個頁面
+                        if (data.imagePath) {
+                            const imgElement = document.querySelector('img[alt="房間圖片"]');
+                            if (imgElement) {
+                                imgElement.src = `/images/beds/${data.imagePath}?t=${new Date().getTime()}`; // 添加時間戳避免緩存
+                            } else {
+                                location.reload(); // 若無圖片，刷新頁面
+                            }
+                        }
+                    } else {
+                        alert(data.message || '上傳失敗，請重試。');
+                    }
+                })
+                .catch(error => alert('上傳過程中發生錯誤。'));
+            });
+        }
+    </script>
+}

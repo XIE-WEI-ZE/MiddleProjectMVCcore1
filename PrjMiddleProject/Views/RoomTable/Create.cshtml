@@ -1,0 +1,180 @@
+﻿@model PrjMiddleProject.Models.RoomTable
+
+@{
+    ViewData["Title"] = "新增房間";
+    var availableMembers = ViewBag.AvailableMembers as List<KeyValuePair<int, string>> ?? new();
+    var occupiedMembers = ViewBag.OccupiedMembers as HashSet<int> ?? new();
+    var memberError = ViewBag.MemberError as string;
+}
+
+<h2 class="mb-4">新增房間資料</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- 房間號碼 -->
+            <div class="form-group mb-3">
+                <label class="form-label">房間號碼</label>
+                <div class="d-flex align-items-center">
+                    <select id="roomPrefix" class="form-select w-auto me-2">
+                        <option value="R001">R001</option>
+                        <option value="R002">R002</option>
+                        <option value="R003">R003</option>
+                        <option value="R004">R004</option>
+                        <option value="R005">R005</option>
+                        <option value="R006">R006</option>
+                        <option value="R007">R007</option>
+                        <option value="R008">R008</option>
+                        <option value="R009">R009</option>
+                        <option value="R010">R010</option>
+                        <option value="R011">R011</option>
+                        <option value="R012">R012</option>
+                        <option value="R013">R013</option>
+                        <option value="R014">R014</option>
+                        <option value="R015">R015</option>
+                    </select>
+                    <span class="mx-1">-</span>
+                    <select id="roomSuffix" class="form-select w-auto">
+                        <option value="">無分區</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+                <input type="hidden" asp-for="RoomNumber" id="RoomNumber" />
+                <span id="roomNumberValidation" class="text-danger"></span> <!-- 動態顯示紅色錯誤 -->
+            </div>
+
+            <!-- 房間名稱 -->
+            <div class="form-group mb-3">
+                <label asp-for="RoomName" class="form-label">房間名稱</label>
+                <select asp-for="RoomName" class="form-select">
+                    <option value="">請選擇</option>
+                    <option>秋康</option>
+                    <option>夏雨</option>
+                    <option>松竹</option>
+                </select>
+                <span asp-validation-for="RoomName" class="text-danger"></span>
+            </div>
+
+            <!-- 房型 -->
+            <div class="form-group mb-3">
+                <label asp-for="RoomType" class="form-label">房型</label>
+                <select asp-for="RoomType" class="form-select">
+                    <option value="">請選擇</option>
+                    <option value="false">單人房</option>
+                    <option value="true">多人房</option>
+                </select>
+                <span asp-validation-for="RoomType" class="text-danger"></span>
+            </div>
+
+            <!-- 床位數量 -->
+            <div class="form-group mb-3">
+                <label asp-for="BedCount" class="form-label">床位數量</label>
+                <select asp-for="BedCount" class="form-select">
+                    <option value="">請選擇</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                </select>
+                <span asp-validation-for="BedCount" class="text-danger"></span>
+            </div>
+
+            <!-- 上傳圖片 -->
+            <div class="form-group mb-3">
+                <label class="form-label">上傳圖片</label>
+                <input type="file" name="photo" class="form-control" />
+            </div>
+
+            <!-- 房間價格 -->
+            <div class="form-group mb-3">
+                <label asp-for="RoomPrice" class="form-label">房間價格</label>
+                <input asp-for="RoomPrice" class="form-control" type="number" step="1" />
+                <span asp-validation-for="RoomPrice" class="text-danger"></span>
+            </div>
+
+            <!-- 住戶編號 -->
+            <div class="form-group mb-3">
+                <label asp-for="MemberId" class="form-label">住戶編號</label>
+                <select asp-for="MemberId" class="form-select">
+                    <option value="">請選擇</option>
+                    @foreach (var m in availableMembers)
+                    {
+                        var isOccupied = occupiedMembers.Contains(m.Key);
+                        var classAttr = isOccupied ? "text-danger" : "";
+                        var displayText = $"{m.Key} - {m.Value}" + (isOccupied ? "（住民已經入住了）" : "");
+
+                        if (isOccupied)
+                        {
+                            <option value="@m.Key" class="@classAttr" disabled>@displayText</option>
+                        }
+                        else
+                        {
+                            <option value="@m.Key" class="@classAttr">@displayText</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="MemberId" class="text-danger"></span>
+                @if (!string.IsNullOrEmpty(memberError))
+                {
+                    <div class="text-danger">@memberError</div>
+                }
+            </div>
+
+            <!-- 按鈕 -->
+            <div class="form-group mt-4">
+                <input type="submit" value="新增房間" class="btn btn-primary" />
+                <a asp-action="List" class="btn btn-secondary ms-2">返回清單</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const prefixSelect = document.getElementById("roomPrefix");
+        const suffixSelect = document.getElementById("roomSuffix");
+        const hiddenInput = document.getElementById("RoomNumber");
+        const validationSpan = document.getElementById("roomNumberValidation");
+        const memberSelect = document.querySelector("select[name='MemberId']");
+
+        function updateRoomNumber() {
+            const prefix = prefixSelect.value;
+            const suffix = suffixSelect.value;
+            const newRoomNumber = suffix ? `${prefix}-${suffix}` : prefix;
+            hiddenInput.value = newRoomNumber;
+            checkRoomNumberDuplicate(newRoomNumber);
+        }
+
+        function checkRoomNumberDuplicate(roomNumber) {
+            fetch(`/RoomTable/CheckRoomNumber?roomNumber=${roomNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        validationSpan.textContent = data.message;
+                    } else {
+                        validationSpan.textContent = '';
+                    }
+                });
+        }
+
+        function updateMemberDisplay() {
+            const selected = memberSelect.options[memberSelect.selectedIndex];
+            const valueOnly = selected.value;
+            selected.textContent = valueOnly;
+        }
+
+        prefixSelect.addEventListener("change", updateRoomNumber);
+        suffixSelect.addEventListener("change", updateRoomNumber);
+        updateRoomNumber(); // 初始檢查
+
+        memberSelect.addEventListener("change", updateMemberDisplay);
+    </script>
+}
