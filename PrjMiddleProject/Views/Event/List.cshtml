@@ -1,0 +1,169 @@
+﻿@using Azure.Core
+@model IEnumerable<PrjMiddleProject.ViewModel.CEventDetailViewModel>
+
+@{
+    ViewData["Title"] = "活動主表";
+
+     string currentSort = ViewBag.CurrentSort as string ?? "EventID";
+    string sortLabel = currentSort switch
+    {
+        "EventID" => "依編號排序",
+        "CategoryID" => "依類別排序",
+        "Status" => "依狀態排序",
+        _ => "依編號排序"
+    };
+}
+<style>
+ 
+</style>
+
+<h1>活動主表</h1>
+<style>
+    .pl-3 {
+        padding-left: 12px;
+    }
+</style>
+
+@using (Html.BeginForm())
+{    <div class="d-flex align-items-center justify-content-between mb-3">
+        <!-- 左邊：關鍵字 -->
+        <div class="d-flex align-items-center">
+            <label class="me-2 mb-0">關鍵字</label>
+            @Html.TextBox("txtKeyword", null, new { @class = "form-control form-control-sm me-2", style = "width: 200px;" })
+            <button type="submit" class="btn btn-primary btn-sm">查詢</button>
+        </div>
+            <div class="dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                 @sortLabel
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li>
+        <a class="dropdown-item" asp-action="List" asp-route-sortBy="EventID" asp-route-txtKeyword="@Context.Request.Query["txtKeyword"]">依編號排序</a>
+    </li>
+    <li>
+        <a class="dropdown-item" asp-action="List" asp-route-sortBy="CategoryID" asp-route-txtKeyword="@Context.Request.Query["txtKeyword"]">依類別排序</a>
+    </li>
+    <li>
+        <a class="dropdown-item" asp-action="List" asp-route-sortBy="Status" asp-route-txtKeyword="@Context.Request.Query["txtKeyword"]">依狀態排序</a>
+    </li>
+</ul>
+            </div>
+       
+    </div>
+}
+ 
+
+
+
+
+<p>
+    <a asp-action="Create" class="btn btn-success">新增活動</a>
+</p>
+
+
+<table class="table table-bordered table-striped align-middle " >
+    <thead >
+        <tr>
+            <th class="ps-3">編號</th>
+            <th class="ps-3">活動名稱</th>
+            <th class="ps-3">主辦單位</th>
+            <th class="ps-3">類別</th>
+            <th class="ps-3">聯繫窗口</th>
+            <th class="ps-3">活動地點</th>
+            <th class="ps-3">活動內容</th>
+            <th class="ps-3"> 金額</th>
+            <th class="ps-3"> 狀態</th>
+            <th class="ps-3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model)
+            {
+              
+                <tr>
+                    <td class="ps-3">  @Html.DisplayFor(modelItem => item.EventId)</td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.EventName)
+                    </td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.Organizer)
+                    </td>
+                    <td class="ps-3">
+                          
+                        @item.Category?.CategoryName
+                    </td class="ps-3">
+                    <td class="ps-3">
+                        @{
+                            var empDict = ViewBag.EmployeeDict as Dictionary<int, string>;
+                            string contactName = "未知";
+
+                            if (empDict != null && item.ContactPersonId != null)
+                            {
+                                int contactKey = item.ContactPersonId;
+                                if (empDict.ContainsKey(contactKey))
+                                {
+                                    contactName = empDict[contactKey];
+                                }
+                            }
+                        }
+                        @contactName
+                    </td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.EventLocation)
+                    </td>
+                    <td  class="ps-3"style="max-width: 200px; word-wrap: break-word; white-space: normal;">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="ps-3">
+                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+
+
+                    <td >
+                        @item.StatusNavigation?.StatusName
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-info">編輯</a> 
+                        <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-danger" new { onclick = "return confirm('確定嗎?')" }>刪除</a>
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+    @{
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    string keyword = Context.Request.Query["txtKeyword"];
+}
+
+@if (totalPages > 1)
+{
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <!-- 第一頁 -->
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="List" asp-route-page="1" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">&laquo;</a>
+            </li>
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" asp-action="List" asp-route-page="@i" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">@i</a>
+                </li>
+            }
+
+            <!-- 最後一頁 -->
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="List" asp-route-page="@totalPages" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+}
+ 
+    </ul>
+</nav>
