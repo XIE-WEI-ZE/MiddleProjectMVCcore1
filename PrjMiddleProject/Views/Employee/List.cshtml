@@ -1,0 +1,152 @@
+﻿@model PrjMiddleProject.ViewModel.CEmployeeKeywordViewModel
+
+@{
+    ViewData["Title"] = "List";
+}
+
+
+<h1 class="mb-4 text-center fw-bold bg-primary text-white py-2 rounded fs-1">員工列表</h1>
+<div class="row mb-3">
+    <div class="col-md-6">
+        @using (Html.BeginForm("List", "Employee", FormMethod.Get))
+        {
+            <div class="row g-2 align-items-center">
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.txtKeyword, new { @class = "form-control", @placeholder = "請輸入關鍵字" })
+                </div>
+
+                <div class="col-md-3">
+                    @Html.DropDownListFor(m => m.SelectedDepartment, Model.DepartmentList, "請選擇部門", new { @class = "form-select", id = "departmentSelect" })
+                </div>
+
+                <div class="col-md-3">
+                    <select id="jobTitleSelect" name="SelectedJobTitle" class="form-select">
+                        <option value="">請先選擇部門</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <input type="submit" value="查詢" class="btn btn-primary w-100" />
+                </div>
+
+                @Html.Hidden("statusFilter", Context.Request.Query["statusFilter"])
+            </div>
+        }
+    </div>
+
+    
+    <div class="col-md-6 text-end">
+        
+        <a asp-action="List" asp-route-statusFilter="在職" class="btn btn-outline-success me-2">顯示在職</a>
+        <a asp-action="List" asp-route-statusFilter="離職" class="btn btn-outline-secondary me-2">顯示離職</a>
+        <a asp-action="List" asp-route-statusFilter="" class="btn btn-outline-warning me-2">顯示所有</a>
+        <a asp-action="Create" asp-controller="Employee" class="btn btn-danger me-2">新增員工</a>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover align-middle text-center">
+    <thead class="table-primary">
+        <tr>
+            <th style="width:5%;">#</th>
+            <th style="width:15%;">部門</th>
+            <th style="width:15%;">職稱</th>
+            <th style="width:15%;">姓名</th>
+            <th style="width:15%;">在職狀態</th>
+            <th style="width:35%;">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model.Employees)
+            {
+                count++;
+                <tr>
+                    <td>@count</td>
+                    <td>@item.DepartmentName</td>
+                    <td>@item.JobName</td>
+                    <td>@item.Name</td>
+                    <td>
+                        @if (item.EmploymentStatus == "在職")
+                        {
+                            <span class="badge bg-success text-white fs-6 fw-normal px-3 py-2">在職</span>
+                        }
+                        else if (item.EmploymentStatus == "離職")
+                        {
+                            <span class="badge bg-secondary text-white fs-6 fw-normal px-3 py-2">離職</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary text-white fs-6 fw-normal px-3 py-2">@item.EmploymentStatus</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-2">
+                            @Html.ActionLink("詳細資料", "Details", "Employee", new { id = item.EmployeeId }, new { @class = "btn btn-outline-warning me-2" }) |
+                            @Html.ActionLink("編輯", "Edit", "Employee", new { id = item.EmployeeId }, new { @class = "btn btn-outline-danger me-2" })
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@section Styles {
+    <style>
+
+        th{
+            font-weight: bold;
+            color: #000000;
+        }
+    </style>
+}
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // 預選的部門和職稱值（編輯時用）
+            const selectedDept = $('#departmentSelect').val();
+            const selectedJob = '@Model.SelectedJobTitle';
+
+            if (selectedDept) {
+                loadJobTitles(selectedDept, selectedJob);
+            }
+
+            $('#departmentSelect').change(function () {
+                const deptId = $(this).val();
+                loadJobTitles(deptId, null); // 部門切換時清空職稱選項
+            });
+
+            function loadJobTitles(departmentName, selectedJobTitle) {
+                const $jobSelect = $('#jobTitleSelect');
+                $jobSelect.empty();
+
+                if (departmentName) {
+                    $.ajax({
+                        url: '@Url.Action("GetJobTitlesByDepartmentName", "Employee")',
+                        data: { departmentName: departmentName },
+                        success: function (data) {
+                            $jobSelect.append($('<option>', {
+                                value: '',
+                                text: '請選擇職稱'
+                            }));
+
+                            $.each(data, function (i, item) {
+                                $jobSelect.append($('<option>', {
+                                    value: item.jobName,
+                                    text: item.jobName,
+                                    selected: item.jobName === selectedJobTitle
+                                }));
+                            });
+                        },
+                        error: function () {
+                            $jobSelect.append('<option value="">載入失敗</option>');
+                        }
+                    });
+                } else {
+                    $jobSelect.append('<option value="">請先選擇部門</option>');
+                }
+            }
+        });
+    </script>
+}
+
