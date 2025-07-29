@@ -1,0 +1,484 @@
+﻿@model PrjMiddleProject.Models.Employee
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="mb-4 text-center fw-bold bg-primary text-white py-2 rounded fs-1">新增員工</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- 第一列：姓名 / 性別 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="Gender" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9 d-flex align-items-center">
+                            <div class="form-check me-4">
+                                <input class="form-check-input" asp-for="Gender" type="radio" value="男" id="genderMale" />
+                                <label class="form-check-label" for="genderMale">男</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="Gender" type="radio" value="女" id="genderFemale" />
+                                <label class="form-check-label" for="genderFemale">女</label>
+                            </div>
+                            <span asp-validation-for="Gender" class="text-danger ms-2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二列：部門名稱 / 職稱名稱 -->
+            <div class="row mb-3">
+
+                <!-- 部門 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="DepartmentId" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.Departments" id="departmentSelect">
+                                <option value="" disabled selected>請選擇部門</option>
+                            </select>
+                            @* <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.Departments" id="departmentSelect"></select> *@
+                            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 職稱 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="JobTitleId" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="JobTitleId" class="form-control" id="jobTitleSelect">
+                                <option value="">請先選擇部門</option>
+                            </select>
+                            <span asp-validation-for="JobTitleId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 第三列：身分證字號 / 行動電話 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="EmployeeIdnumber" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="EmployeeIdnumber" class="form-control" />
+                            <span asp-validation-for="EmployeeIdnumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="MobileNumber" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="MobileNumber" class="form-control" />
+                            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第四列：Email / 教育程度 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 教育程度 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="EducationLevel" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="EducationLevel" class="form-control" asp-items="ViewBag.EducationList">
+                                <option value="">請選擇教育程度</option>
+                            </select>
+                            <span asp-validation-for="EducationLevel" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 插入在第四列之後，Email / 教育程度 下方 -->
+            <!-- 第五列：出生日期 -->
+            <div class="row mb-3">
+                <!-- 出生日期 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="DateOfBirth" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="DateOfBirth" class="form-control" type="date" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 薪資帳戶 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="PayrollBankAccount" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="PayrollBankAccount" class="form-control" />
+                            <span asp-validation-for="PayrollBankAccount" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 第五列：現居地址 / 戶籍地址 -->
+            <div class="row mb-3">
+                <!-- 現居地址 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="CurrentAddress" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="CurrentAddress" class="form-control" id="CurrentAddress" />
+                            <span asp-validation-for="CurrentAddress" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 戶籍地址 + checkbox -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="RegisteredAddress" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="RegisteredAddress" class="form-control" id="RegisteredAddress" />
+                            <span asp-validation-for="RegisteredAddress" class="text-danger"></span>
+
+                            <!-- Checkbox 勾選是否同現居地址 -->
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="sameAddressCheck" />
+                                <label class="form-check-label" for="sameAddressCheck">
+                                    同現居地址，勾選後無法編輯
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第六列：身高 / 體重 -->
+            <div class="row mb-3">
+                <!-- 身高 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="Height" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="Height" class="form-control" asp-items="ViewBag.HeightList">
+                                <option value="">請選擇身高</option>
+                            </select>
+                            <span asp-validation-for="Height" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 體重 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="Weight" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="Weight" class="form-control" asp-items="ViewBag.WeightList">
+                                <option value="">請選擇體重</option>
+                            </select>
+                            <span asp-validation-for="Weight" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 第七列：到職日期 / 年資 -->
+            <div class="row mb-3">
+                <!-- 到職日期 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="DateOfHire" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="DateOfHire" type="date" class="form-control" id="DateOfHire" />
+                            <span asp-validation-for="DateOfHire" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 年資（唯讀） -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="YearsOfService" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="YearsOfService" class="form-control" id="YearsOfService" readonly />
+                            <span asp-validation-for="YearsOfService" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- 第八列：緊急聯絡人 / 關係 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="EmergencyContactPerson" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="EmergencyContactPerson" class="form-control" />
+                            <span asp-validation-for="EmergencyContactPerson" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="EmergencyContactRelationship" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="EmergencyContactRelationship" class="form-control" asp-items="ViewBag.RelationshipList">
+                                <option value="">-- 請選擇 --</option>
+                            </select>
+                            <span asp-validation-for="EmergencyContactRelationship" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第九列：聯絡人電話 / 大頭照 -->
+            <div class="row mb-3">
+                <!-- 左欄：聯絡人電話 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label asp-for="EmergencyContactPhone" class="col-sm-3 col-form-label text-center"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="EmergencyContactPhone" class="form-control" />
+                            <span asp-validation-for="EmergencyContactPhone" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右欄：上傳大頭照 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-center">上傳大頭照</label>
+                        <div class="col-sm-9">
+                            <input asp-for="PhotoFile" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="PhotoFile" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 第十列：良民證 / 在職狀態 -->
+            <div class="row mb-3">
+                <!-- 良民證 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-center" asp-for="PoliceClearanceCertificate"></label>
+                        <div class="col-sm-9 d-flex align-items-center">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" asp-for="PoliceClearanceCertificate" value="true" id="pcc-yes">
+                                <label class="form-check-label" for="pcc-yes">是</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="PoliceClearanceCertificate" value="false" id="pcc-no">
+                                <label class="form-check-label" for="pcc-no">否</label>
+                            </div>
+                            <span asp-validation-for="PoliceClearanceCertificate" class="text-danger ms-2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 在職狀態 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-center" asp-for="EmploymentStatus"></label>
+                        <div class="col-sm-9 d-flex align-items-center">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" asp-for="EmploymentStatus" value="在職" id="es-yes">
+                                <label class="form-check-label" for="es-yes">在職</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="EmploymentStatus" value="離職" id="es-no">
+                                <label class="form-check-label" for="es-no">離職</label>
+                            </div>
+                            <span asp-validation-for="EmploymentStatus" class="text-danger ms-2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第十一列：是否為系統管理員 / 是否為主管 -->
+            <div class="row mb-4">
+                <!-- 系統管理員 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-center" asp-for="IsAdmin"></label>
+                        <div class="col-sm-9 d-flex align-items-center">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" asp-for="IsAdmin" value="true" id="admin-yes">
+                                <label class="form-check-label" for="admin-yes">是</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="IsAdmin" value="false" id="admin-no">
+                                <label class="form-check-label" for="admin-no">否</label>
+                            </div>
+                            <span asp-validation-for="IsAdmin" class="text-danger ms-2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 主管 -->
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-center" asp-for="IsSupervisor"></label>
+                        <div class="col-sm-9 d-flex align-items-center">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" asp-for="IsSupervisor" value="true" id="supervisor-yes">
+                                <label class="form-check-label" for="supervisor-yes">是</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="IsSupervisor" value="false" id="supervisor-no">
+                                <label class="form-check-label" for="supervisor-no">否</label>
+                            </div>
+                            <span asp-validation-for="IsSupervisor" class="text-danger ms-2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 按鈕區 -->
+            <div class="row mb-3">
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary btn-lg me-2"
+                            onclick="return confirm('確定要新增嗎？')">
+                        新增
+                    </button>
+                    <a asp-action="List" class="btn btn-secondary btn-lg"
+                       onclick="return confirm('確定要取消並返回嗎？')">
+                        取消
+                    </a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+@section Styles {
+    <style>
+        body {
+            background-color: #f6f9fc;
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border-color: #ced4da;
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-control {
+            height: calc(2.25rem + 2px);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-radius: 8px;
+        }
+
+        .row.mb-3 {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+    </style>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        
+        $(document).ready(function () {
+            $('#departmentSelect').on('change', function () {
+                var deptId = $(this).val();
+                var jobTitleSelect = $('#jobTitleSelect');
+
+                jobTitleSelect.empty(); // 清空現有選項
+
+                if (deptId) {
+                    $.ajax({
+                        url: '/Employee/GetJobTitlesByDepartment',
+                        type: 'GET',
+                        data: { departmentId: deptId },
+                        success: function (data) {
+                            jobTitleSelect.append('<option value="">請選擇職稱</option>');
+                            $.each(data, function (i, job) {
+                                jobTitleSelect.append('<option value="' + job.jobTitleId + '">' + job.jobName + '</option>');
+                            });
+                        },
+                        error: function () {
+                            jobTitleSelect.append('<option value="">載入失敗</option>');
+                        }
+                    });
+                } else {
+                    jobTitleSelect.append('<option value="">請先選擇部門</option>');
+                }
+            });
+        });
+                   document.getElementById("sameAddressCheck").addEventListener("change", function () {
+            const currentAddress = document.getElementById("CurrentAddress").value;
+            const registeredAddress = document.getElementById("RegisteredAddress");
+
+            if (this.checked) {
+                registeredAddress.value = currentAddress;
+                registeredAddress.setAttribute("readonly", true); // 鎖住輸入
+            } else {
+                registeredAddress.removeAttribute("readonly");     // ✅ 取消鎖定
+                // registeredAddress.value = "";                      清空內容（可選）
+            }
+        });
+                      document.getElementById("DateOfHire").addEventListener("change", function () {
+            const hireDate = new Date(this.value);
+            const today = new Date();
+
+            let years = today.getFullYear() - hireDate.getFullYear();
+            let months = today.getMonth() - hireDate.getMonth();
+
+            if (today.getDate() < hireDate.getDate()) {
+                months--; // 還沒到當月入職日，月份往前調整
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            if (!isNaN(years) && years >= 0) {
+                document.getElementById("YearsOfService").value = `${years} 年 ${months} 個月`;
+            } else {
+                document.getElementById("YearsOfService").value = "";
+            }
+        });
+    </script>
+}

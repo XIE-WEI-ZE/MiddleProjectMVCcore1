@@ -1,0 +1,325 @@
+﻿@model PrjMiddleProject.Models.Employee
+
+@{
+    ViewData["Title"] = "修改員工資料";
+}
+
+<h2 class="mb-4 text-center fw-bold bg-primary text-white py-2 rounded fs-1">修改員工資料</h2>
+<hr />
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="EmployeeId" />
+
+    <div class="row">
+        <!-- 姓名 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <!-- 性別 -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">性別</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="Gender" class="form-check-input" value="男" @(Model.Gender == "男" ? "checked" : "") />
+                    <label class="form-check-label">男</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="Gender" class="form-check-input" value="女" @(Model.Gender == "女" ? "checked" : "") />
+                    <label class="form-check-label">女</label>
+                </div>
+            </div>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <!-- 部門 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="DepartmentId" class="form-label"></label>
+            <select asp-for="DepartmentId" class="form-select" asp-items="ViewBag.Departments" id="departmentSelect">
+                <option value="">-- 請選擇部門 --</option>
+            </select>
+            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+        </div>
+
+        <!-- 職位（會依部門動態更新） -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="JobTitleId" class="form-label"></label>
+            <select asp-for="JobTitleId" class="form-select" id="jobTitleSelect">
+                <option value="">-- 請選擇職位 --</option>
+            </select>
+            <span asp-validation-for="JobTitleId" class="text-danger"></span>
+        </div>
+
+        <!-- 身分證 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="EmployeeIdnumber" class="form-label"></label>
+            <input asp-for="EmployeeIdnumber" class="form-control" />
+            <span asp-validation-for="EmployeeIdnumber" class="text-danger"></span>
+        </div>
+        
+        <!-- 出生日期 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="DateOfBirth" class="form-label"></label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <!-- 到職日期 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="DateOfHire" class="form-label"></label>
+            <input asp-for="DateOfHire" type="date" class="form-control" />
+            <span asp-validation-for="DateOfHire" class="text-danger"></span>
+        </div>
+
+        
+
+        <!-- 教育程度 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="EducationLevel" class="form-label"></label>
+            <select asp-for="EducationLevel" class="form-select" asp-items="ViewBag.EducationList"></select>
+            <span asp-validation-for="EducationLevel" class="text-danger"></span>
+        </div>
+
+        <!-- 身高 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Height" class="form-label"></label>
+            <select asp-for="Height" class="form-select" asp-items="ViewBag.HeightList"></select>
+            <span asp-validation-for="Height" class="text-danger"></span>
+        </div>
+
+        <!-- 體重 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Weight" class="form-label"></label>
+            <select asp-for="Weight" class="form-select" asp-items="ViewBag.WeightList"></select>
+            <span asp-validation-for="Weight" class="text-danger"></span>
+        </div>
+
+        <!-- 現居地址 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="CurrentAddress" class="form-label"></label>
+            <input asp-for="CurrentAddress" class="form-control" id="currentAddress" />
+            <span asp-validation-for="CurrentAddress" class="text-danger"></span>
+        </div>
+
+        <!-- 戶籍地址 + checkbox -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="RegisteredAddress" class="form-label"></label>
+            <input asp-for="RegisteredAddress" class="form-control" id="registeredAddress" />
+            <span asp-validation-for="RegisteredAddress" class="text-danger"></span> 
+            <div class="form-check mb-1">
+                <input type="checkbox" class="form-check-input" id="sameAsCurrent" />
+                <label class="form-check-label" for="sameAsCurrent">與現居地址相同</label>
+            </div>
+        </div>
+
+        <!-- 行動電話 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="MobileNumber" class="form-label"></label>
+            <input asp-for="MobileNumber" class="form-control" />
+            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+        </div>
+
+        <!-- 電子郵件 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <!-- 緊急聯絡人 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="EmergencyContactPerson" class="form-label"></label>
+            <input asp-for="EmergencyContactPerson" class="form-control" />
+            <span asp-validation-for="EmergencyContactPerson" class="text-danger"></span>
+        </div>
+
+        <!-- 緊急聯絡人關係 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="EmergencyContactRelationship" class="form-label"></label>
+            <select asp-for="EmergencyContactRelationship" class="form-select" asp-items="ViewBag.RelationshipList"></select>
+            <span asp-validation-for="EmergencyContactRelationship" class="text-danger"></span>
+        </div>
+
+        <!-- 緊急聯絡人電話 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="EmergencyContactPhone" class="form-label"></label>
+            <input asp-for="EmergencyContactPhone" class="form-control" />
+            <span asp-validation-for="EmergencyContactPhone" class="text-danger"></span>
+        </div>
+
+        <!-- 薪資帳戶 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="PayrollBankAccount" class="form-label"></label>
+            <input asp-for="PayrollBankAccount" class="form-control" />
+            <span asp-validation-for="PayrollBankAccount" class="text-danger"></span>
+        </div>
+
+        <!-- 在職狀態 -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">是否在職</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="EmploymentStatus" class="form-check-input"
+                           value="在職" @(Model.EmploymentStatus == "在職" ? "checked" : "") />
+                    <label class="form-check-label">在職</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="EmploymentStatus" class="form-check-input"
+                           value="離職" @(Model.EmploymentStatus == "離職" ? "checked" : "") />
+                    <label class="form-check-label">離職</label>
+                </div>
+            </div>
+            <span asp-validation-for="EmploymentStatus" class="text-danger"></span>
+        </div>
+
+        <!-- 良民證 -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">是否具有良民證</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="PoliceClearanceCertificate" class="form-check-input" value="true" @(Model.PoliceClearanceCertificate == true ? "checked" : "") />
+                    <label class="form-check-label">是</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="PoliceClearanceCertificate" class="form-check-input" value="false" @(Model.PoliceClearanceCertificate == false ? "checked" : "") />
+                    <label class="form-check-label">否</label>
+                </div>
+            </div>
+            <span asp-validation-for="PoliceClearanceCertificate" class="text-danger"></span>
+        </div>
+
+        <!-- 是否為管理員 -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">是否為系統管理員</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="IsAdmin" class="form-check-input" value="true" @(Model.IsAdmin == true ? "checked" : "") />
+                    <label class="form-check-label">是</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="IsAdmin" class="form-check-input" value="false" @(Model.IsAdmin == false ? "checked" : "") />
+                    <label class="form-check-label">否</label>
+                </div>
+            </div>
+            <span asp-validation-for="IsAdmin" class="text-danger"></span>
+        </div>
+
+        <!-- 是否為主管 -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">是否為主管</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="IsSupervisor" class="form-check-input" value="true" @(Model.IsSupervisor == true ? "checked" : "") />
+                    <label class="form-check-label">是</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="IsSupervisor" class="form-check-input" value="false" @(Model.IsSupervisor == false ? "checked" : "") />
+                    <label class="form-check-label">否</label>
+                </div>
+            </div>
+            <span asp-validation-for="IsSupervisor" class="text-danger"></span>
+        </div>
+       
+        <!-- 大頭照 -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="PhotoFile" class="form-label"></label>
+            <input asp-for="PhotoFile" type="file" class="form-control" />
+            <span asp-validation-for="PhotoFile" class="text-danger"></span>
+
+            @if (!string.IsNullOrEmpty(Model.Photopath))
+            {
+                <img src="@Model.Photopath" class="img-thumbnail mt-2" style="max-width: 150px;" />
+            }
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2" onclick="return confirm('確定要儲存修改嗎？')">
+            <i class="bi bi-save"></i> 儲存修改
+        </button>
+        <a asp-action="List" class="btn btn-secondary" onclick="return confirm('尚未儲存的變更將會遺失，確定要返回列表嗎？')">
+            <i class="bi bi-arrow-left"></i> 返回列表
+        </a>
+    </div>
+</form>
+@section Styles {
+    <style>
+        
+        label {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        </style >
+}
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            // 預先載入既有的職位（如果是編輯畫面）
+            var selectedJobId = '@Model.JobTitleId';
+            var departmentId = $('#departmentSelect').val();
+            if (departmentId) {
+                loadJobTitles(departmentId, selectedJobId);
+            }
+
+            // 當部門選項變更時，自動更新職位清單
+            $('#departmentSelect').change(function () {
+                var departmentId = $(this).val();
+                loadJobTitles(departmentId, null);
+            });
+
+            function loadJobTitles(departmentId, selectedJobId) {
+                $('#jobTitleSelect').empty(); // 清空原本資料
+
+                if (departmentId) {
+                    $.getJSON('/Employee/GetJobTitlesByDepartment', { departmentId: departmentId }, function (data) {
+                        $('#jobTitleSelect').append($('<option>', {
+                            value: '',
+                            text: '-- 請選擇職位 --'
+                        }));
+
+                        $.each(data, function (i, item) {
+                            $('#jobTitleSelect').append($('<option>', {
+                                value: item.jobTitleId,
+                                text: item.jobName,
+                                selected: item.jobTitleId == selectedJobId
+                            }));
+                        });
+                    });
+                } else {
+                    $('#jobTitleSelect').append($('<option>', {
+                        value: '',
+                        text: '-- 請選擇職位 --'
+                    }));
+                }
+            }
+        });
+              $(document).ready(function () {
+            const $registered = $("#registeredAddress");
+            const $current = $("#currentAddress");
+            const $checkbox = $("#sameAsCurrent");
+
+            $checkbox.change(function () {
+                if ($(this).is(":checked")) {
+                    // 自動帶入現居地址並設為唯讀
+                    $registered.val($current.val()).prop("readonly", true);
+                } else {
+                    // 保留目前輸入值，解除唯讀（不還原）
+                    $registered.prop("readonly", false);
+                }
+            });
+
+            // 若現居地址變更且 checkbox 有勾選，則同步更新戶籍欄位
+            $current.on("input", function () {
+                if ($checkbox.is(":checked")) {
+                    $registered.val($current.val());
+                }
+            });
+        });
+    </script>
+}
