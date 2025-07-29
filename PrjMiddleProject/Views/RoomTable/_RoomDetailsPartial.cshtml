@@ -1,0 +1,97 @@
+﻿@model PrjMiddleProject.Models.RoomTable
+
+<div class="row">
+    <!-- 左半邊：房間資料 -->
+    <div class="col-md-6">
+        <h5>房間資料</h5>
+        <dl class="row">
+            <dt class="col-sm-4">房號</dt>
+            <dd class="col-sm-8">@Model.RoomNumber</dd>
+
+            <dt class="col-sm-4">房名</dt>
+            <dd class="col-sm-8">@Model.RoomName</dd>
+
+            <dt class="col-sm-4">房型</dt>
+            <dd class="col-sm-8">@((Model.RoomType == true) ? "雙人房" : "單人房")</dd>
+
+            <dt class="col-sm-4">床位數</dt>
+            <dd class="col-sm-8">@Model.BedCount</dd>
+
+            <dt class="col-sm-4">房價</dt>
+            <dd class="col-sm-8">@Model.RoomPrice?.ToString("N0") 元</dd>
+
+            <dt class="col-sm-4">圖片</dt>
+            <dd class="col-sm-8">
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@Url.Content("~/images/beds/" + Model.ImagePath)" width="150" class="img-thumbnail" alt="房間圖片" />
+                }
+                else
+                {
+                    <span class="text-muted">無圖片</span>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <!-- 右半邊：會員資料 -->
+    <div class="col-md-6">
+        <h5>會員資料</h5>
+        @if (Model.Member != null)
+        {
+            <dl class="row">
+                <dt class="col-sm-4">姓名</dt>
+                <dd class="col-sm-8">@Model.Member.Name</dd>
+
+                <dt class="col-sm-4">性別</dt>
+                <dd class="col-sm-8">@Model.Member.Gender</dd>
+
+                <dt class="col-sm-4">出生日期</dt>
+                <dd class="col-sm-8">
+                    @{
+                        if (Model.Member.BirthDate.HasValue)
+                        {
+                            var rocYear = Model.Member.BirthDate.Value.Year - 1911;
+                            <text>中華民國 @rocYear 年 @Model.Member.BirthDate.Value.Month 月 @Model.Member.BirthDate.Value.Day 日</text>
+                        }
+                        else
+                        {
+                            <span class="text-muted">未提供</span>
+                        }
+                    }
+                </dd>
+
+                <dt class="col-sm-4">入住時間</dt>
+                <dd class="col-sm-8">
+                    @if (Model.Member.MoveInDate.HasValue)
+                    {
+                        @Model.Member.MoveInDate.Value.ToString("yyyy-MM-dd")
+                    }
+                    else
+                    {
+                        <span class="text-muted">未提供</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-4">電子郵件</dt>
+                <dd class="col-sm-8">@(Model.Member.Email ?? "未提供")</dd>
+
+                <dt class="col-sm-4">照片</dt>
+                <dd class="col-sm-8">
+                    @if (!string.IsNullOrEmpty(Model.Member.Photo))
+                    {
+                        <img src="@Url.Content("~/images/members/" + Model.Member.Photo)" width="150" class="img-thumbnail" alt="會員照片" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">無照片</span>
+                    }
+                </dd>
+            </dl>
+        }
+        else
+        {
+            <p class="text-muted">無關聯會員資料</p>
+        }
+    </div>
+</div>
