@@ -63,17 +63,17 @@
 
 <table class="table table-bordered table-striped align-middle " >
     <thead >
-        <tr>
-            <th class="ps-3">編號</th>
-            <th class="ps-3">活動名稱</th>
-            <th class="ps-3">主辦單位</th>
-            <th class="ps-3">類別</th>
-            <th class="ps-3">聯繫窗口</th>
-            <th class="ps-3">活動地點</th>
-            <th class="ps-3">活動內容</th>
-            <th class="ps-3"> 金額</th>
-            <th class="ps-3"> 狀態</th>
-            <th class="ps-3"></th>
+        <tr class="text-center">
+            <th>編號</th>
+            <th>活動名稱</th>
+            <th>主辦單位</th>
+            <th >類別</th>
+            <th>聯繫窗口</th>
+            <th>活動地點</th>
+            <th>活動內容</th>
+            <th> 金額</th>
+            <th> 狀態</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -90,18 +90,17 @@
                         @Html.DisplayFor(modelItem => item.Organizer)
                     </td>
                     <td class="ps-3">
-                          
                         @item.Category?.CategoryName
-                    </td class="ps-3">
+                    </td>
                     <td class="ps-3">
                         @{
-                            var empDict = ViewBag.EmployeeDict as Dictionary<int, string>;
+                            var empDict = ViewBag.EmployeeDict as Dictionary<int, string>;//2.讀取Dictionary
                             string contactName = "未知";
 
-                            if (empDict != null && item.ContactPersonId != null)
+                            if (empDict != null && item.ContactPersonId != null)//有employee資料表且ContactPersonId有值
                             {
                                 int contactKey = item.ContactPersonId;
-                                if (empDict.ContainsKey(contactKey))
+                                if (empDict.ContainsKey(contactKey))//檢查字典裡是否有這個員工 ID
                                 {
                                     contactName = empDict[contactKey];
                                 }
@@ -112,7 +111,7 @@
                     <td class="ps-3">
                         @Html.DisplayFor(modelItem => item.EventLocation)
                     </td>
-                    <td  class="ps-3"style="max-width: 200px; word-wrap: break-word; white-space: normal;">
+                    <td  class="ps-3"style="max-width: 200px; word-wrap: break-word; white-space: normal;">//控制寬距與換行
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td class="ps-3">
@@ -133,8 +132,7 @@
         }
     </tbody>
 </table>
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
+
     @{
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
@@ -142,9 +140,9 @@
 }
 
 @if (totalPages > 1)
-{
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
+{ <div class="text-center">
+     <nav aria-label="Page navigation example ">
+        <ul class="pagination justify-content-center">
             <!-- 第一頁 -->
             <li class="page-item @(currentPage == 1 ? "disabled" : "")">
                 <a class="page-link" asp-action="List" asp-route-page="1" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">&laquo;</a>
@@ -162,7 +160,8 @@
                 <a class="page-link" asp-action="List" asp-route-page="@totalPages" asp-route-txtKeyword="@keyword" asp-route-sortBy="@currentSort">&raquo;</a>
             </li>
         </ul>
-    </nav>
+      </nav>
+    </div>
 }
  
     </ul>

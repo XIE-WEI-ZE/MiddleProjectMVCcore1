@@ -34,6 +34,7 @@ namespace PrjMiddleProject.Controllers
                      e.EventId.ToString().Contains(txtKeyWord)
                 );
             }
+            //排序
             ViewBag.CurrentSort = sortBy;
             switch (sortBy)
             {
@@ -82,7 +83,7 @@ namespace PrjMiddleProject.Controllers
             //    datas= db.EventDetails.Include(e => e.Category).Where(e => e.EventName.Contains(txtKeyWord));
 
             //抓取聯繫窗口人員姓名(資料庫忘記串接)
-            var employeeDict = db.Employees.ToDictionary(e => e.EmployeeId, e => e.Name);
+            var employeeDict = db.Employees.ToDictionary(e => e.EmployeeId, e => e.Name);//1.建立Dictionary
             ViewBag.EmployeeDict = employeeDict;
             
             
@@ -102,7 +103,7 @@ namespace PrjMiddleProject.Controllers
                  Text = c.CategoryName             //下拉選單顯示的字
             }).ToList();
 
-            ViewBag.CategoryId = categories;
+            ViewBag.CategoryId = categories;//傳送參數到view頁面
             //活動狀態
             var status = db.EventStatuses.Where(e=>e.StatusCategory=="活動總表")
             .Select(c => new SelectListItem
