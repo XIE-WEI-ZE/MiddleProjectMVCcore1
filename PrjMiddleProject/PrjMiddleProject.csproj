@@ -22,6 +22,13 @@
     <Folder Include="wwwroot\images\event\" />
     <Folder Include="wwwroot\images\eshoppingcart\" />
     <Folder Include="wwwroot\images\employees\" />
+    <Folder Include="wwwroot\images\employees\" />
+    <Folder Include="wwwroot\images\eshoppingcart\" />
+    <Folder Include="wwwroot\images\members\" />
+    <Folder Include="wwwroot\images\event\" />
+    <Folder Include="wwwroot\images\social\" />
+    <Folder Include="wwwroot\images\ShopProductThumb\" />
+    <Folder Include="wwwroot\images\ShopProductLarge\" />
     <Folder Include="wwwroot\images\ShopProductThumb\" />
     <Folder Include="wwwroot\images\social\" />
     <Folder Include="wwwroot\images\ShopProductLarge\" />

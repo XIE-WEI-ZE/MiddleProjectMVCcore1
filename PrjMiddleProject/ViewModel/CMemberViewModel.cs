@@ -38,3 +38,4 @@ namespace PrjMiddleProject.ViewModels
         public bool IsEnabled { get; set; }
     }
 }
+    

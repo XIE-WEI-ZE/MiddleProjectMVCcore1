@@ -301,15 +301,15 @@
                             <!-- profile start -->
                             
                             @*登入註冊用*@
-                            @* @{
+                            @{
                                 string json = Context.Session.GetString("SK_LOGIN_USER");
                                 var member = string.IsNullOrEmpty(json) ? null : JsonSerializer.Deserialize<Member>(json);
                                 if (member == null)
                                 {
                                     Context.Response.Redirect("/Home/Login");
                                 }
-                            } *@                           
-                            @* <div class="profile-box ml-15">
+                            }                           
+                            <div class="profile-box ml-15">
                                 <button class="dropdown-toggle bg-transparent border-0" type="button" id="profile"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="profile-info">
@@ -340,7 +340,7 @@
                                         <li><a asp-controller="Home" asp-action="Register"><i class="lni lni-user"></i> 註冊</a></li>
                                     }
                                 </ul>
-                            </div> *@
+                            </div>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
                                     <li>
                                         <div class="author-info flex items-center !p-1">

@@ -29,7 +29,7 @@ namespace PrjMiddleProject.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove(CDictionary.SK_LOGIN_USER);
-            return RedirectToAction("Index");
+            return RedirectToAction("Login", "Login");
         }
 
         public IActionResult Privacy()

@@ -41,6 +41,12 @@ namespace PrjMiddleProject.Controllers
             if (!ModelState.IsValid)
                 return View(vm);
 
+            if (string.IsNullOrEmpty(vm.Account)) {
+                ModelState.AddModelError("Account", "帳號不可為空");
+                return View();
+            }
+
+
             if (_context.Members.Any(m => m.Account == vm.Account))
             {
                 ViewBag.Message = "帳號已存在";
@@ -75,7 +81,7 @@ namespace PrjMiddleProject.Controllers
             _context.SaveChanges();
 
             TempData["message"] = "註冊成功，請您登入";
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Login");
         }
 
         public IActionResult Login()
